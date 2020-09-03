@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { MapPage } from './MapPage'
+import { MapPage } from './Pages/MapPage'
 
 function App() {
   return (
