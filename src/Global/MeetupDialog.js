@@ -1,31 +1,41 @@
+/* Libraries */
 import React, { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem } from '@material-ui/core';
+import { useSelector } from 'react-redux'
+import { Dialog, 
+    DialogTitle,
+    DialogContent, 
+    DialogActions, 
+    Button, 
+    TextField, 
+    MenuItem 
+} from '@material-ui/core';
 
+/* Components */
 import { MeetupCategories } from '../Data/MeetupCategories'
 
-export const NewMeetupPopup = ({ open, onClose, onSubmit, newCoords }) => {
-    const [meetupDetails, setMeetupDetails] = useState({
-        meetupId: 2,
-        meetupName: null,
-        meetupCategory: null,
-        meetupDate: null,
-        meetupAdress: null,
-        meetupCords: newCoords
-    }) 
+/* Functions */
+import { setMeetupName, 
+    setMeetupCat,
+    setMeetupDate,
+    setMeetupAddress,
+    setMeetup
+} from '../StateManagement/actions/selectedMeetup'
+import { addMeetup } from '../StateManagement/actions/userMeetups'
+import { isNameValid,
+    isCategoryValid
+} from "../Validation/newMeetupValidation"
 
-    // True means error
+
+export const MeetupDialog = () => {
+    let selectedMeetup = useSelector(({ selectedMeetup }) => selectedMeetup)
+
+    /// True means error
     const [inputValidator, setInputValidator] = useState({
         meetupName: null,
         meetupCategory: null,
-        meetupDate: false
     })
-
-    const handleSubmit = () => {
-        if (isInputValid()) onSubmit(meetupDetails)
-    }
-
     
-    const isInputValid = () => {
+    const isFormValid = () => {
         return Object.keys(inputValidator).every((key) => {
             if (inputValidator[key] !== false) {
                 setInputValidator({
@@ -37,33 +47,44 @@ export const NewMeetupPopup = ({ open, onClose, onSubmit, newCoords }) => {
         })
     }
 
+    /* Handlers */
     const handleInputChange = (e) => {
         let { name, value } = e.target
 
-        setMeetupDetails({
-            ...meetupDetails,
-            [name]: value,
-            meetupCords: newCoords
-        })
+        switch (name) {
+            case `meetupName`: 
+                if (!isNameValid(value)) 
+                    setInputValidator({...inputValidator, [name]: true})
+                else 
+                    setInputValidator({...inputValidator, [name]: false})
+                setMeetupName(value); 
+                break; 
+            case `meetupCategory`: 
+                if (!isCategoryValid(value)) 
+                    setInputValidator({...inputValidator, [name]: true})
+                else
+                    setInputValidator({...inputValidator, [name]: false})
+                setMeetupCat(value); 
+                break;
+            case `meetupDate`: setMeetupDate(value); break;
+            case `meetupAddress`: setMeetupAddress(value); break;
+            default: break;
+            }
+    }
 
-        if (!value) {
-            setInputValidator({
-                ...inputValidator,
-                [name]: true
-            })
-        }
-        else {
-            setInputValidator({
-                ...inputValidator,
-                [name]: false
-            })
+    const handleClose = () => setMeetup(null)
+
+    const handleSubmit = () => {
+        if (isFormValid()) {
+            addMeetup(selectedMeetup)
+            handleClose()
         }
     }
 
     return (
         <Dialog
-            open = {open}
-            onClose = {onClose}
+            open = {Boolean(selectedMeetup)}
+            onClose = {handleClose}
         >
             <DialogTitle id="eventTitle">Create a new meetup</DialogTitle>
             <DialogContent>
@@ -102,10 +123,23 @@ export const NewMeetupPopup = ({ open, onClose, onSubmit, newCoords }) => {
                     name="meetupDate"
                     fullWidth
                     onChange={handleInputChange}
+                    value={selectedMeetup?.date}
+                />
+                <TextField 
+                    required
+                    margin="dense"
+                    label="Meetup address"
+                    type="text"
+                    name="meetupAddress"
+                    fullWidth
+                    InputProps={{
+                        readOnly: true
+                    }}
+                    value={selectedMeetup?.address}
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} color="primary">Close</Button>
+                <Button onClick={handleClose} color="primary">Close</Button>
                 <Button onClick={handleSubmit} color="primary">Save</Button>
             </DialogActions>
         </Dialog>

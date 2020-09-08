@@ -1,10 +1,15 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 
-import { MapPage } from './Pages/MapPage'
+import { MapComponent } from './Map/MapComponent'
+import store from './StateManagement/store'
+
 
 function App() {
   return (
-    <MapPage/>
+    <Provider store={store}>
+      <MapComponent/>
+    </Provider> 
   );
 }
 
