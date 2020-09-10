@@ -1,14 +1,14 @@
 /* Libraires */
 import React from 'react'
-import { LoadScript }from '@react-google-maps/api'
-import { GoogleMap } from '@react-google-maps/api'
+import { LoadScript, GoogleMap }from '@react-google-maps/api'
 
 /* Components */
 import { MapLayer } from './MapLayer'
+import { MeetupCategories } from '../Data/MeetupCategories'
 
 /* Functions */
 import { setMeetup } from '../StateManagement/actions/selectedMeetup'
-
+import { getAddressByCoords } from '../Services/GetAddressByCoords'
 
 const googleMapLibraries = [`places`]
 const mapContainerStyle = {
@@ -21,25 +21,30 @@ const rishonLatLng = {
 }
 
 export const MapComponent = () => {
+
     /* Handlers */
-    const handleMapClick = (event) => {
+    const handleMapClick = async(event) => {
         let lat = event.latLng.lat(),
-            lng = event.latLng.lng()
-        fetch(`${process.env.REACT_APP_FETCH_ADDRESS_REQUEST}/address?lat=${lat}&lng=${lng}`, {mode: 'cors'})
-        .then(response => response.text())
-        .then(address => {
-            let pointCoords = {
-                lat: lat,
-                lng: lng
-            }
+            lng = event.latLng.lng();
+
+        try {
+            const address = await getAddressByCoords(lat, lng)
+            console.log(`Got address! ${address}`)
             let currentDate = new Date().toISOString()
             currentDate = currentDate.substring(0, currentDate.indexOf(':', currentDate.indexOf(':')+1))
             setMeetup({
+                category: MeetupCategories[0].value,
                 address: address,
-                coords: pointCoords,
+                coords: {
+                    lat: lat,
+                    lng: lng
+                },
                 date: currentDate
             })
-        })
+            
+        } catch (error) {
+            
+        }
     }
 
     return (

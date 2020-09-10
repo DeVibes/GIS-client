@@ -1,4 +1,15 @@
-export const selectedMeetupReducer = (state = null, action) => {
+export const initialMeetupState = {
+    name: ``,
+    category: ``,
+    date: ``,
+    address: ``,
+    coords: {
+        lat: null,
+        lng: null
+    }
+}
+
+export const selectedMeetupReducer = (state = initialMeetupState, action) => {
     switch (action.type) {
         case `SET_MEETUP_NAME`:
             return {

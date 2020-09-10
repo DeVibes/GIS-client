@@ -12,18 +12,17 @@ import { Dialog,
 
 /* Components */
 import { MeetupCategories } from '../Data/MeetupCategories'
+import { initialMeetupState } from '../StateManagement/reducers/selectedMeetupReducer'
 
 /* Functions */
+import { postNewMeetup } from '../Services/PostNewMeetup'
 import { setMeetupName, 
     setMeetupCat,
     setMeetupDate,
     setMeetupAddress,
     setMeetup
 } from '../StateManagement/actions/selectedMeetup'
-import { addMeetup } from '../StateManagement/actions/userMeetups'
-import { isNameValid,
-    isCategoryValid
-} from "../Validation/newMeetupValidation"
+import { isNameValid } from "../Validation/newMeetupValidation"
 
 
 export const MeetupDialog = () => {
@@ -32,7 +31,6 @@ export const MeetupDialog = () => {
     /// True means error
     const [inputValidator, setInputValidator] = useState({
         meetupName: null,
-        meetupCategory: null,
     })
     
     const isFormValid = () => {
@@ -59,31 +57,26 @@ export const MeetupDialog = () => {
                     setInputValidator({...inputValidator, [name]: false})
                 setMeetupName(value); 
                 break; 
-            case `meetupCategory`: 
-                if (!isCategoryValid(value)) 
-                    setInputValidator({...inputValidator, [name]: true})
-                else
-                    setInputValidator({...inputValidator, [name]: false})
-                setMeetupCat(value); 
-                break;
+            case `meetupCategory`: setMeetupCat(value); break;
             case `meetupDate`: setMeetupDate(value); break;
             case `meetupAddress`: setMeetupAddress(value); break;
             default: break;
             }
     }
 
-    const handleClose = () => setMeetup(null)
+    const handleClose = () => setMeetup(initialMeetupState)
 
-    const handleSubmit = () => {
+    const handleSubmit = async() => {
         if (isFormValid()) {
-            addMeetup(selectedMeetup)
-            handleClose()
+            // addMeetup(selectedMeetup)
+            if (await postNewMeetup(selectedMeetup))
+                handleClose()
         }
     }
 
     return (
         <Dialog
-            open = {Boolean(selectedMeetup)}
+            open = {Boolean(selectedMeetup?.address)}
             onClose = {handleClose}
         >
             <DialogTitle id="eventTitle">Create a new meetup</DialogTitle>
@@ -107,6 +100,7 @@ export const MeetupDialog = () => {
                     name="meetupCategory"
                     fullWidth
                     onChange={handleInputChange}
+                    value={selectedMeetup?.category}
                 >
                     {MeetupCategories.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
@@ -119,7 +113,6 @@ export const MeetupDialog = () => {
                     label="Meetup date"
                     error={inputValidator.meetupDate || false}
                     type="datetime-local"
-                    defaultValue="2020-09-01T10:30"
                     name="meetupDate"
                     fullWidth
                     onChange={handleInputChange}

@@ -20,9 +20,10 @@ export const MapMeetups = () => {
         <>
             {userMeetups.map((meetup) => (
                 <Marker
-                    position={meetup.meetupCoords}
+                    key={meetup._id}
+                    position={meetup.coords}
                     icon={{
-                        url: `/${meetup.meetupCategory}.png`,
+                        url: `/${meetup.category}.png`,
                         scaledSize: {
                             width: 50,
                             height: 50
