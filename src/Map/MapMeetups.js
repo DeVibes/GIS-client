@@ -8,6 +8,7 @@ import { Marker } from '@react-google-maps/api'
 /* Functions */
 import { getUserMeetups } from '../Services/GetUserMeetups'
 import { setMeetup } from '../StateManagement/actions/selectedMeetup'
+import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
 
 export const MapMeetups = () => {
     let userMeetups = useSelector(({ userMeetups }) => userMeetups)
@@ -21,6 +22,7 @@ export const MapMeetups = () => {
         console.log(`Clicked on meetup!`)
         console.log(selectedMeetup)
         setMeetup(selectedMeetup)
+        setIsPopupOpen(true)
     }
 
     return (

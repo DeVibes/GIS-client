@@ -4,8 +4,8 @@ export const initialMeetupState = {
     date: ``,
     address: ``,
     coords: {
-        lat: null,
-        lng: null
+        lat: 0,
+        lng: 0
     }
 }
 

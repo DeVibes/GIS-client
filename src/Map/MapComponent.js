@@ -1,5 +1,6 @@
 /* Libraires */
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { LoadScript, GoogleMap }from '@react-google-maps/api'
 
 /* Components */
@@ -9,6 +10,8 @@ import { MeetupCategories } from '../Data/MeetupCategories'
 /* Functions */
 import { setMeetup } from '../StateManagement/actions/selectedMeetup'
 import { setIsDialogOpen } from '../StateManagement/actions/isDialogOpen'
+import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
+import { setUserCoords } from '../StateManagement/actions/userData'
 import { getAddressByCoords } from '../Services/GetAddressByCoords'
 
 const googleMapLibraries = [`places`]
@@ -16,12 +19,18 @@ const mapContainerStyle = {
     width: `100vw`,
     height: `100vh`
 }
-const rishonLatLng = {
-    lat: 31.962649,
-    lng: 34.805643
-}
 
 export const MapComponent = () => {
+    useEffect(() => {
+        //TODO Get current location from browser
+        setUserCoords({
+            lat: 31.963358630236876,
+            lng: 34.80391502380371
+        })
+    }, [])
+    
+    let userLocation = useSelector(({ userData }) => userData.coords)
+
 
     /* Handlers */
     const handleMapClick = async(event) => {
@@ -42,6 +51,7 @@ export const MapComponent = () => {
                 },
                 date: currentDate
             })
+            setIsPopupOpen(false)
             setIsDialogOpen(true)
             
         } catch (error) {
@@ -56,7 +66,7 @@ export const MapComponent = () => {
         >
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
-                center={rishonLatLng}
+                center={userLocation}
                 zoom={15}
                 onClick={(event) =>{handleMapClick(event)}}
             >

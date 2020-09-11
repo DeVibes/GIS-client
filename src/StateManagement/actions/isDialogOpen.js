@@ -4,7 +4,7 @@ export const setIsDialogOpen = isOpen => {
     console.log(`UPDATED IS DIALOG OPEN STATE!`)
     console.log(isOpen)
     store.dispatch({
-        type: `SET_IS_OPEN`,
+        type: `SET_IS_DIALOG_OPEN`,
         payload: isOpen
     })
 }
