@@ -1,15 +1,29 @@
-import React, { useEffect } from 'react'
+/* Libraries */
+import React from 'react'
+import { useSelector } from 'react-redux'
 import { InfoWindow } from '@react-google-maps/api'
 
-export const MeetupPopup = ({ selectedMeetup, setSelectedMeetup }) => {
+/* Components */
+import { initialMeetupState } from '../StateManagement/reducers/selectedMeetupReducer'
+
+/* Functions */
+import { setMeetup } from "../StateManagement/actions/selectedMeetup";
+
+export const MeetupPopup = () => {
+    let clickedMeetup = useSelector(({ selectedMeetup }) => selectedMeetup)
+
+    const handleClosePopup = () => {
+        setMeetup(initialMeetupState)
+    }
+
     return (
         <>
-            {selectedMeetup && (
+            {clickedMeetup.name && (
                 <InfoWindow
-                        position={selectedMeetup?.meetupCoords}
-                        onCloseClick={() => setSelectedMeetup(null)}
+                        position={clickedMeetup?.coords}
+                        onCloseClick={handleClosePopup}
                 >
-                    <>{selectedMeetup.meetupName}</>
+                    <>{clickedMeetup.name}</>
                 </InfoWindow>
             )}
         </>

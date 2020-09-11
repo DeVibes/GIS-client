@@ -7,7 +7,7 @@ import { Marker } from '@react-google-maps/api'
 
 /* Functions */
 import { getUserMeetups } from '../Services/GetUserMeetups'
-
+import { setMeetup } from '../StateManagement/actions/selectedMeetup'
 
 export const MapMeetups = () => {
     let userMeetups = useSelector(({ userMeetups }) => userMeetups)
@@ -15,6 +15,13 @@ export const MapMeetups = () => {
     useEffect(() => {
         getUserMeetups()
     }, [])
+
+    const onMeetupClick = (id) => {
+        let selectedMeetup = userMeetups.find(m => m._id === id)
+        console.log(`Clicked on meetup!`)
+        console.log(selectedMeetup)
+        setMeetup(selectedMeetup)
+    }
 
     return (
         <>
@@ -29,7 +36,7 @@ export const MapMeetups = () => {
                             height: 50
                         }
                     }}
-                    // onClick={() => {setSelectedMeetup(meetup)}}
+                    onClick={() => {onMeetupClick(meetup._id)}}
                 />
             ))}
         </>

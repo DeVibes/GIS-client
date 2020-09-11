@@ -8,6 +8,7 @@ import { MeetupCategories } from '../Data/MeetupCategories'
 
 /* Functions */
 import { setMeetup } from '../StateManagement/actions/selectedMeetup'
+import { setIsDialogOpen } from '../StateManagement/actions/isDialogOpen'
 import { getAddressByCoords } from '../Services/GetAddressByCoords'
 
 const googleMapLibraries = [`places`]
@@ -41,6 +42,7 @@ export const MapComponent = () => {
                 },
                 date: currentDate
             })
+            setIsDialogOpen(true)
             
         } catch (error) {
             

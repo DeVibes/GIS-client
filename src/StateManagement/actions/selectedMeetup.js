@@ -49,7 +49,8 @@ export const setMeetupCoords = meetup => {
 }
 
 export const setMeetup = meetup => {
-    console.log(`UPDATED STATE! - ${meetup}`)
+    console.log(`UPDATED SELECTED MEETUP STATE!`)
+    console.log(meetup)
     store.dispatch({
         type: `SET_MEETUP`,
         payload: meetup,

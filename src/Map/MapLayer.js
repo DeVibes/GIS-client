@@ -16,10 +16,7 @@ export const MapLayer = () => {
         <>
             <MapMeetups/>
             <MeetupDialog/>
-            <MeetupPopup
-                // selectedMeetup={selectedMeetup}
-                // setSelectedMeetup={setSelectedMeetup}
-            />
+            <MeetupPopup/>
         </>
     )
 }

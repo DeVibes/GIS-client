@@ -22,11 +22,13 @@ import { setMeetupName,
     setMeetupAddress,
     setMeetup
 } from '../StateManagement/actions/selectedMeetup'
+import { setIsDialogOpen } from "../StateManagement/actions/isDialogOpen";
 import { isNameValid } from "../Validation/newMeetupValidation"
 
 
 export const MeetupDialog = () => {
     let selectedMeetup = useSelector(({ selectedMeetup }) => selectedMeetup)
+    let isDialogOpen = useSelector(({ isDialogOpen }) => isDialogOpen)
 
     /// True means error
     const [inputValidator, setInputValidator] = useState({
@@ -64,11 +66,13 @@ export const MeetupDialog = () => {
             }
     }
 
-    const handleClose = () => setMeetup(initialMeetupState)
+    const handleClose = () => {
+        setMeetup(initialMeetupState)
+        setIsDialogOpen(false)
+    }
 
     const handleSubmit = async() => {
         if (isFormValid()) {
-            // addMeetup(selectedMeetup)
             if (await postNewMeetup(selectedMeetup))
                 handleClose()
         }
@@ -76,7 +80,7 @@ export const MeetupDialog = () => {
 
     return (
         <Dialog
-            open = {Boolean(selectedMeetup?.address)}
+            open = {isDialogOpen}
             onClose = {handleClose}
         >
             <DialogTitle id="eventTitle">Create a new meetup</DialogTitle>
