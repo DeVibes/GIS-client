@@ -1,14 +1,25 @@
+/* Libraires */
 import React from 'react';
 import { Provider } from 'react-redux';
+import { Route, Switch, BrowserRouter } from "react-router-dom";
 
+/* Components */
+import { LoginPage } from './Pages/LoginPage'
 import { MapComponent } from './Map/MapComponent'
+
 import store from './StateManagement/store'
 
 
 function App() {
   return (
     <Provider store={store}>
-      <MapComponent/>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" component={LoginPage} />
+          <Route exact path="/map" component={MapComponent} />
+          <MapComponent/>
+        </Switch>
+      </BrowserRouter>
     </Provider> 
   );
 }

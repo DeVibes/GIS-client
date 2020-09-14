@@ -1,5 +1,14 @@
 import store from '../store'
 
+export const setUserName = coords => {
+    console.log(`USER COORDS STATE CHANGED`)
+    console.log(coords)
+    store.dispatch({
+        type: `SET_USER_COORDS`,
+        payload: coords
+    })
+}
+
 export const setUserMeetups = meetups => {
     console.log(`USER MEETUPS STATE CHANGED (SET)`)
     console.log(meetups)
@@ -18,6 +27,33 @@ export const addUserMeetup = meetup => {
     })
 }
 
+export const setPersonName = name => {
+    console.log(`PERSON NAME STATE CHANGED`)
+    console.log(name)
+    store.dispatch({
+        type: `SET_PERSON_NAME`,
+        payload: name
+    })
+}
+
+export const setUserPhone = phone => {
+    console.log(`USER PHONE STATE CHANGED`)
+    console.log(phone)
+    store.dispatch({
+        type: `SET_USER_PHONE`,
+        payload: phone
+    })
+}
+
+export const setUserAddress = address => {
+    console.log(`USER ADDRESS STATE CHANGED`)
+    console.log(address)
+    store.dispatch({
+        type: `SET_USER_COORDS`,
+        payload: address
+    })
+}
+
 export const setUserCoords = coords => {
     console.log(`USER COORDS STATE CHANGED`)
     console.log(coords)
@@ -26,3 +62,4 @@ export const setUserCoords = coords => {
         payload: coords
     })
 }
+
