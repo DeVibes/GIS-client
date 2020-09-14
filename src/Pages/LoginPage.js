@@ -9,7 +9,7 @@ import { BackgroundLoop } from '../Global/BackgroundLoop'
 import { SnackbarPopup } from '../Global/SnackbarPopup';
 
 /* Functions */
-import { setSnackState } from '../StateManagement/actions/isSnackOpen'
+import { setSnackState } from '../StateManagement/actions/snackPopup'
 
 const pageStyle = makeStyles({
     loginWrapper: {
@@ -20,7 +20,7 @@ const pageStyle = makeStyles({
 })
 
 export const LoginPage = () => {
-    const isSnackOpen = useSelector(({ isSnackOpen }) => isSnackOpen)
+    const snackPopup = useSelector(({ snackPopup }) => snackPopup)
     const { loginWrapper } = pageStyle()
 
     const handleSnackClose = () => setSnackState(false)
@@ -30,12 +30,11 @@ export const LoginPage = () => {
             <LoginForm/>
             <BackgroundLoop/>
             <SnackbarPopup 
-                open={isSnackOpen} 
+                open={snackPopup.isSnackOpen} 
                 onClose={handleSnackClose} 
-                severity="success"
-            >
-                User saved  
-            </SnackbarPopup>
+                severity={snackPopup.isError}
+                text={snackPopup.msg}
+            />
         </div>
     )
 }

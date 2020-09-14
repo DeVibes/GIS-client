@@ -28,7 +28,7 @@ import { setUsername,
 } from '../StateManagement/actions/loginData'
 
 import { createNewUser } from '../Services/CreateNewUser'
-import { setSnackState } from '../StateManagement/actions/isSnackOpen'
+import { setSnackState, setSnackMsg, setSnack } from '../StateManagement/actions/snackPopup'
 
 
 const fields = {
@@ -102,9 +102,18 @@ export const RegisterStep = ({ stepChange }) => {
         if (isFormValid()) {
             try {
                 const createdUser = await createNewUser(loginData)
-                setSnackState(true)
-            } catch (error) {
-                console.log(error)
+                setSnack({
+                    isSnackOpen: true,
+                    msg: createdUser.message,
+                    isError: false
+                })
+            } catch ({ message }) {
+                console.log(message)
+                setSnack({
+                    isSnackOpen: true,
+                    msg: message,
+                    isError: true
+                })
             }
         }
     }

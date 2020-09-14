@@ -6,12 +6,14 @@ export const createNewUser = async (user) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
     })
-
+    const responseData = await response.json()
     if (response.status === 500)
-        throw new Error(`user creation error`)
+        throw new Error(responseData)
     else {
-        const userSaved = await response.json()
-        console.log(userSaved)
-        return userSaved
+        console.log(responseData)
+        return {
+            userCreated: responseData,
+            message: "User created successfully"
+        }
     }
 }

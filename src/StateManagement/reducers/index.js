@@ -13,6 +13,6 @@ export default combineReducers({
     loginData: loginDataReducer,
     isDialogOpen: dialogReducer,
     isPopupOpen: popupReducer,
-    isSnackOpen: snackReducer,
+    snackPopup: snackReducer,
 })
 
