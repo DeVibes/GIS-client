@@ -14,8 +14,7 @@ import { Dialog,
 import { MeetupCategories } from '../Data/MeetupCategories'
 import { initialMeetupState } from '../StateManagement/reducers/selectedMeetupReducer'
 
-/* Functions */
-import { postNewMeetup } from '../Services/PostNewMeetup'
+/* Redux */
 import { setMeetupName, 
     setMeetupCat,
     setMeetupDate,
@@ -23,6 +22,11 @@ import { setMeetupName,
     setMeetup
 } from '../StateManagement/actions/selectedMeetup'
 import { setIsDialogOpen } from "../StateManagement/actions/isDialogOpen";
+
+/* Services */
+import { postNewMeetup } from '../Services/PostNewMeetup'
+
+/* Validation */
 import { isNameValid } from "../Validation/newMeetupValidation"
 
 

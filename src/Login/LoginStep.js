@@ -1,4 +1,4 @@
-/* Libraires */
+/* Libraries */
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from "react-router-dom";
@@ -13,9 +13,6 @@ from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
-/* functions */
-import { isUsernameValid, isPasswordValid } from '../Validation/userValidation';
-
 /* Redux */
 import { setUsername, setPassword } from '../StateManagement/actions/loginData'
 import { setSnack } from '../StateManagement/actions/snackPopup'
@@ -23,6 +20,9 @@ import { setUserData } from '../StateManagement/actions/userData'
 
 /* Services */
 import { getUserByUsername } from '../Services/GetUserByUsername'
+
+/* Validation */
+import { isUsernameValid, isPasswordValid } from '../Validation/userValidation';
 
 export const LoginStep = ({ stepChange }) => {
     let loginData = useSelector(({ loginData }) => loginData)

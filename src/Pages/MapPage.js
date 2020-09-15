@@ -1,21 +1,22 @@
-/* Libraires */
-import React, { useEffect, useState } from 'react'
+/* Libraries */
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { LoadScript, GoogleMap }from '@react-google-maps/api'
 
 /* Components */
-import { MapLayer } from './MapLayer'
+import { MapLayer } from '../Map/MapLayer'
 import { MeetupCategories } from '../Data/MeetupCategories'
 import { SnackbarPopup } from '../Global/SnackbarPopup';
 
-
-/* Functions */
+/* Redux */
 import { setMeetup } from '../StateManagement/actions/selectedMeetup'
 import { setIsDialogOpen } from '../StateManagement/actions/isDialogOpen'
 import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
 import { setUserCoords } from '../StateManagement/actions/userData'
-import { getAddressByCoords } from '../Services/GetAddressByCoords'
 import { setSnackState } from '../StateManagement/actions/snackPopup'
+
+/* Services */
+import { getAddressByCoords } from '../Services/GetAddressByCoords'
 
 const googleMapLibraries = [`places`]
 const mapContainerStyle = {
@@ -23,7 +24,7 @@ const mapContainerStyle = {
     height: `100vh`
 }
 
-export const MapComponent = () => {
+export const MapPage = () => {
     const snackPopup = useSelector(({ snackPopup }) => snackPopup)
 
     useEffect(() => {

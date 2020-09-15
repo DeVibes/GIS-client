@@ -1,6 +1,5 @@
-/* Libraires */
+/* Libraries */
 import React, { useState } from 'react'
-import { Card } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
 
@@ -28,7 +27,6 @@ export const LoginForm = () => {
     const [activeStep, setActiveStep] = useState(0)
     const classes = styles()
     const handleStepChange = (newStep) => setActiveStep(newStep)
-
 
     return (
         <div className={classes.formWrapper}>

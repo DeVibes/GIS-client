@@ -1,14 +1,13 @@
+/* Libraries */
 import React from 'react'
 import { InfoWindow } from 'react-google-maps'
 
-export const EditMeetupPopup = ({ selectedMeetup }) => {
+export const EditMeetupPopup = ({ selectedMeetup }) => (
+    <InfoWindow
+        position={selectedMeetup.meetupCords}
+    >
+        {selectedMeetup.meetupName}
+    </InfoWindow>
+)
 
-    return (
-        <InfoWindow
-            position={selectedMeetup.meetupCords}
-        >
-            {selectedMeetup.meetupName}
-        </InfoWindow>
-    )
-}
 

@@ -3,12 +3,12 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Marker } from '@react-google-maps/api'
 
-/* Components */
-
-/* Functions */
-import { getUserMeetups } from '../Services/GetUserMeetups'
+/* Redux */
 import { setMeetup } from '../StateManagement/actions/selectedMeetup'
 import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
+
+/* Services */
+import { getUserMeetups } from '../Services/GetUserMeetups'
 
 export const MapMeetups = () => {
     let meetups = useSelector(({ meetups }) => meetups)

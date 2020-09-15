@@ -1,4 +1,4 @@
-/* Libraires */
+/* Libraries */
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Card, 
@@ -14,25 +14,24 @@ import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import PhoneIcon from '@material-ui/icons/Phone';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
-/* functions */
-import { isUsernameValid,
-    isPasswordValid,
-    isNameValid,
-    isPhoneValid 
-} from '../Validation/userValidation';
-
+/* Redux */
 import { setUsername,
     setPassword,
     setName,
     setPhone,
     setLoginData,
 } from '../StateManagement/actions/loginData'
-
-import { initialDataState } from '../StateManagement/reducers/loginDataReducer'
-
-import { createNewUser } from '../Services/CreateNewUser'
 import { setSnack } from '../StateManagement/actions/snackPopup'
 
+/* Services */
+import { createNewUser } from '../Services/CreateNewUser'
+
+/* Validation */
+import { isUsernameValid,
+    isPasswordValid,
+    isNameValid,
+    isPhoneValid 
+} from '../Validation/userValidation';
 
 const fields = {
     username: `username`,
