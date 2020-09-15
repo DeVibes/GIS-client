@@ -11,14 +11,14 @@ import { setMeetup } from '../StateManagement/actions/selectedMeetup'
 import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
 
 export const MapMeetups = () => {
-    let userMeetups = useSelector(({ userMeetups }) => userMeetups)
+    let meetups = useSelector(({ meetups }) => meetups)
 
     useEffect(() => {
         getUserMeetups()
     }, [])
 
     const onMeetupClick = (id) => {
-        let selectedMeetup = userMeetups.find(m => m._id === id)
+        let selectedMeetup = meetups.find(m => m._id === id)
         console.log(`Clicked on meetup!`)
         console.log(selectedMeetup)
         setMeetup(selectedMeetup)
@@ -27,7 +27,7 @@ export const MapMeetups = () => {
 
     return (
         <>
-            {userMeetups.map((meetup) => (
+            {meetups.map((meetup) => (
                 <Marker
                     key={meetup._id}
                     position={meetup.coords}

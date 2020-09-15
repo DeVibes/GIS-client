@@ -6,6 +6,8 @@ import { LoadScript, GoogleMap }from '@react-google-maps/api'
 /* Components */
 import { MapLayer } from './MapLayer'
 import { MeetupCategories } from '../Data/MeetupCategories'
+import { SnackbarPopup } from '../Global/SnackbarPopup';
+
 
 /* Functions */
 import { setMeetup } from '../StateManagement/actions/selectedMeetup'
@@ -13,6 +15,7 @@ import { setIsDialogOpen } from '../StateManagement/actions/isDialogOpen'
 import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
 import { setUserCoords } from '../StateManagement/actions/userData'
 import { getAddressByCoords } from '../Services/GetAddressByCoords'
+import { setSnackState } from '../StateManagement/actions/snackPopup'
 
 const googleMapLibraries = [`places`]
 const mapContainerStyle = {
@@ -21,6 +24,8 @@ const mapContainerStyle = {
 }
 
 export const MapComponent = () => {
+    const snackPopup = useSelector(({ snackPopup }) => snackPopup)
+
     useEffect(() => {
         //TODO Get current location from browser
         setUserCoords({
@@ -33,6 +38,8 @@ export const MapComponent = () => {
 
 
     /* Handlers */
+    const handleSnackClose = () => setSnackState(false)
+
     const handleMapClick = async(event) => {
         let lat = event.latLng.lat(),
             lng = event.latLng.lng();
@@ -71,6 +78,12 @@ export const MapComponent = () => {
                 onClick={(event) =>{handleMapClick(event)}}
             >
                 <MapLayer/>
+                <SnackbarPopup 
+                    open={snackPopup.isSnackOpen} 
+                    onClose={handleSnackClose} 
+                    severity={snackPopup.isError}
+                    text={snackPopup.msg}
+                />
             </GoogleMap>
         </LoadScript>
     )

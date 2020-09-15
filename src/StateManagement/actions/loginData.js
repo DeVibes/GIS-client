@@ -35,3 +35,12 @@ export const setPhone = phone => {
         payload: phone
     })
 }
+
+export const setLoginData = loginData => {
+    console.log(`LOGIN DATA STATE CHANGED`)
+    console.log(loginData)
+    store.dispatch({
+        type: `SET_LOGIN_DATA`,
+        payload: loginData
+    })
+}

@@ -1,4 +1,4 @@
-import { addMeetup } from '../StateManagement/actions/userMeetups'
+import { addMeetup } from '../StateManagement/actions/meetups'
 
 export const postNewMeetup = async(meetup) => {
     const response = await fetch(`${process.env.REACT_APP_SERVER}/meetups`, {

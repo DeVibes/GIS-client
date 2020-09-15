@@ -1,10 +1,10 @@
-let initialState = {
+export const initialSnackState = {
     isSnackOpen: false,
     msg: null,
     isError: false
 }
 
-export const snackReducer = (state = initialState, action) => {
+export const snackReducer = (state = initialSnackState, action) => {
     switch (action.type) {
         case `SET_IS_SNACK_OPEN`:
             return {

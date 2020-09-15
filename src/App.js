@@ -17,7 +17,6 @@ function App() {
         <Switch>
           <Route exact path="/" component={LoginPage} />
           <Route exact path="/map" component={MapComponent} />
-          <MapComponent/>
         </Switch>
       </BrowserRouter>
     </Provider> 

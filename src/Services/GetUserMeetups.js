@@ -1,4 +1,4 @@
-import { setMeetupsAction } from '../StateManagement/actions/userMeetups'
+import { setMeetupsAction } from '../StateManagement/actions/meetups'
 
 export const getUserMeetups = async () => {
     try {

@@ -63,3 +63,12 @@ export const setUserCoords = coords => {
     })
 }
 
+export const setUserData = data => {
+    console.log(`USER DATA STATE CHANGED`)
+    console.log(data)
+    store.dispatch({
+        type: `SET_USER_DATA`,
+        payload: data
+    })
+}
+

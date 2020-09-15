@@ -15,6 +15,8 @@ export const loginDataReducer = (state = initialDataState, action) => {
             return { ...state, personName: action.payload }
         case `SET_PHONE`:
             return { ...state, phone: action.payload }
+        case `SET_LOGIN_DATA`:
+            return action.payload;
         default:
             return state;
     }

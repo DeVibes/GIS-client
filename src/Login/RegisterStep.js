@@ -1,5 +1,5 @@
 /* Libraires */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Card, 
     CardContent, 
@@ -10,8 +10,8 @@ import { Card,
     Grid } 
 from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
-import PhoneIcon from '@material-ui/icons/Phone';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import PhoneIcon from '@material-ui/icons/Phone';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 /* functions */
@@ -24,11 +24,14 @@ import { isUsernameValid,
 import { setUsername,
     setPassword,
     setName,
-    setPhone
+    setPhone,
+    setLoginData,
 } from '../StateManagement/actions/loginData'
 
+import { initialDataState } from '../StateManagement/reducers/loginDataReducer'
+
 import { createNewUser } from '../Services/CreateNewUser'
-import { setSnackState, setSnackMsg, setSnack } from '../StateManagement/actions/snackPopup'
+import { setSnack } from '../StateManagement/actions/snackPopup'
 
 
 const fields = {
@@ -107,6 +110,8 @@ export const RegisterStep = ({ stepChange }) => {
                     msg: createdUser.message,
                     isError: false
                 })
+                setPassword("")
+                stepChange(1)
             } catch ({ message }) {
                 console.log(message)
                 setSnack({

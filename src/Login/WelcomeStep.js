@@ -15,7 +15,6 @@ const styles = makeStyles({
 export const WelcomeStep = ({ stepChange }) => {
     const classes = styles()
 
-
     return (
         <Card className={classes.card}>
             <CardContent>
