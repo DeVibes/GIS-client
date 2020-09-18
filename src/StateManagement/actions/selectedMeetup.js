@@ -40,15 +40,39 @@ export const setMeetupAddress = meetupAddress => {
     })
 }
 
-export const setMeetupCoords = meetup => {
-    console.log(`UPDATED STATE! - ${meetup}`)
+export const setMeetupCoords = coords => {
+    console.log(`UPDATED STATE! - ${coords}`)
     store.dispatch({
         type: `SET_MEETUP_COORDS`,
-        payload: meetup,
+        payload: coords,
     })
 }
 
-export const setMeetup = meetup => {
+export const setMeetupAdmin = admin => {
+    console.log(`UPDATED STATE! - ${admin}`)
+    store.dispatch({
+        type: `SET_MEETUP_ADMIN`,
+        payload: admin,
+    })
+}
+
+export const setMeetupMaxAttendants = number => {
+    console.log(`UPDATED STATE! - ${number}`)
+    store.dispatch({
+        type: `SET_MEETUP_MAX_ATTENDANTS`,
+        payload: number,
+    })
+}
+
+export const setMeetupAttendants = attendant => {
+    console.log(`UPDATED STATE NEW ATTENDANT! - ${attendant}`)
+    store.dispatch({
+        type: `SET_MEETUP_ATTENDANTS`,
+        payload: attendant
+    })
+}
+
+export const setSelectedMeetup = meetup => {
     console.log(`UPDATED SELECTED MEETUP STATE!`)
     console.log(meetup)
     store.dispatch({

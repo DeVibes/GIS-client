@@ -1,5 +1,5 @@
 /* Libraries */
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { InfoWindow } from '@react-google-maps/api'
 import { Avatar, Card, CardContent, CardHeader, CardMedia, Typography, CardActions, Button } from '@material-ui/core';
@@ -9,9 +9,13 @@ import { red } from '@material-ui/core/colors';
 /* Components */
 import { initialMeetupState } from '../StateManagement/reducers/selectedMeetupReducer'
 
-/* Functions */
-import { setMeetup } from "../StateManagement/actions/selectedMeetup";
+/* Redux */
+import { setSelectedMeetup } from "../StateManagement/actions/selectedMeetup";
+import { updateMeetup } from "../StateManagement/actions/meetups"
 import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
+
+/* Services */
+import { editMeetup } from '../Services/Meetups'
 
 
 const useStyles = makeStyles({
@@ -48,13 +52,29 @@ const useStyles = makeStyles({
 
 export const MeetupPopup = () => {
     let clickedMeetup = useSelector(({ selectedMeetup }) => selectedMeetup)
+    let currentUser = useSelector(({ userData }) => userData.username)
     let isOpen = useSelector(({ isPopupOpen }) => isPopupOpen)
 
     const classes = useStyles()
 
     const handleClosePopup = () => {
         setIsPopupOpen(false)
-        setMeetup(initialMeetupState)
+        setSelectedMeetup(initialMeetupState)
+    }
+
+    const handleAttendance = async (isAttending) => {
+        let meetupAttendants = clickedMeetup.attendants
+        if (isAttending) {
+            meetupAttendants.push(currentUser)
+        }
+        else {
+            meetupAttendants = meetupAttendants.filter(attendant => attendant !== currentUser)
+        }
+        const updatedMeetup = await editMeetup(clickedMeetup._id, { 
+            attendants: meetupAttendants 
+        })
+        updateMeetup(updatedMeetup)
+        setSelectedMeetup(updatedMeetup)
     }
 
     return (
@@ -92,11 +112,26 @@ export const MeetupPopup = () => {
                             <Typography paragraph>
                                 Some meetup data
                             </Typography>
+                            {clickedMeetup.attendants.includes(currentUser) &&
+                                <Typography variant="h4">
+                                    Ur in!
+                                </Typography>
+                            }
                         </CardContent>
                         <CardActions className={classes.actions} >
-                            <Button>Manage</Button>
-                            <Button>Sign me up</Button>
-                        </CardActions>
+                            {currentUser === clickedMeetup.admin &&
+                                <Button>Manage</Button>
+                            }
+                            {!clickedMeetup.attendants.includes(currentUser) ?
+                                <Button onClick={() => handleAttendance(true)}>
+                                    Sign me up
+                                </Button>
+                                :
+                                <Button onClick={() => handleAttendance(false)}>
+                                    Cancel attendance
+                                </Button>
+                            }
+                        </CardActions>              
                     </Card>
                 </InfoWindow>
             )}

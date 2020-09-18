@@ -15,16 +15,11 @@ import { MeetupCategories } from '../Data/MeetupCategories'
 import { initialMeetupState } from '../StateManagement/reducers/selectedMeetupReducer'
 
 /* Redux */
-import { setMeetupName, 
-    setMeetupCat,
-    setMeetupDate,
-    setMeetupAddress,
-    setMeetup
-} from '../StateManagement/actions/selectedMeetup'
+import { setSelectedMeetup } from '../StateManagement/actions/selectedMeetup'
 import { setIsDialogOpen } from "../StateManagement/actions/isDialogOpen";
 
 /* Services */
-import { postNewMeetup } from '../Services/PostNewMeetup'
+import { postNewMeetup } from '../Services/Meetups'
 
 /* Validation */
 import { isNameValid } from "../Validation/newMeetupValidation"
@@ -34,48 +29,50 @@ export const MeetupDialog = () => {
     let selectedMeetup = useSelector(({ selectedMeetup }) => selectedMeetup)
     let isDialogOpen = useSelector(({ isDialogOpen }) => isDialogOpen)
 
-    /// True means error
     const [inputValidator, setInputValidator] = useState({
-        meetupName: null,
+        name: null,
+        maxAttendants: null,
     })
     
     const isFormValid = () => {
         return Object.keys(inputValidator).every((key) => {
-            if (inputValidator[key] !== false) {
+            if (inputValidator[key] !== true) {
                 setInputValidator({
                     ...inputValidator,
-                    [key]: true
+                    [key]: false
                 })
             }
-            return inputValidator[key] === false
+            return inputValidator[key] === true
         })
     }
 
     /* Handlers */
     const handleInputChange = (e) => {
         let { name, value } = e.target
+        let isValid = true
 
         switch (name) {
-            case `meetupName`: 
-                if (!isNameValid(value)) 
-                    setInputValidator({...inputValidator, [name]: true})
-                else 
-                    setInputValidator({...inputValidator, [name]: false})
-                setMeetupName(value); 
+            case `name`: 
+                isValid = isNameValid(value)
                 break; 
-            case `meetupCategory`: setMeetupCat(value); break;
-            case `meetupDate`: setMeetupDate(value); break;
-            case `meetupAddress`: setMeetupAddress(value); break;
+            case `maxAttendats`:
+                isValid = Boolean(value)
+                break; 
             default: break;
-            }
+        }
+        setInputValidator({...inputValidator, [name]: isValid})
+        setSelectedMeetup({
+            ...selectedMeetup,
+            [name]: value
+        })
     }
 
     const handleClose = () => {
-        setMeetup(initialMeetupState)
+        setSelectedMeetup(initialMeetupState)
         setIsDialogOpen(false)
     }
 
-    const handleSubmit = async() => {
+    const handleSubmit = async () => {
         if (isFormValid()) {
             if (await postNewMeetup(selectedMeetup))
                 handleClose()
@@ -90,22 +87,35 @@ export const MeetupDialog = () => {
             <DialogTitle id="eventTitle">Create a new meetup</DialogTitle>
             <DialogContent>
                 <TextField 
-                    required
                     margin="dense"
-                    label="Meetup name"
-                    error={inputValidator.meetupName || false}
+                    label="Name"
+                    error={
+                        inputValidator.name == null ? false :!inputValidator.name
+                    }
                     type="text"
-                    name="meetupName"
+                    name="name"
                     fullWidth
                     onChange={handleInputChange}
                 />
                 <TextField
-                    required
                     margin="dense"
-                    label="Meetup category"
-                    error={inputValidator.meetupCategory || false}
+                    label="Max attendants"
+                    error={
+                        inputValidator.maxAttendats == null ? false :!inputValidator.maxAttendats
+                    }
+                    type="number"
+                    name="maxAttendants"
+                    fullWidth
+                    onChange={handleInputChange}
+                />
+                <TextField
+                    margin="dense"
+                    label="Category"
+                    error={
+                        inputValidator.meetupCategory == null ? false :!inputValidator.meetupCategory
+                    }
                     select
-                    name="meetupCategory"
+                    name="category"
                     fullWidth
                     onChange={handleInputChange}
                     value={selectedMeetup?.category}
@@ -118,20 +128,19 @@ export const MeetupDialog = () => {
                 </TextField>
                 <TextField
                     margin="dense"
-                    label="Meetup date"
+                    label="Date"
                     error={inputValidator.meetupDate || false}
                     type="datetime-local"
-                    name="meetupDate"
+                    name="date"
                     fullWidth
                     onChange={handleInputChange}
                     value={selectedMeetup?.date}
                 />
                 <TextField 
-                    required
                     margin="dense"
-                    label="Meetup address"
+                    label="Address"
                     type="text"
-                    name="meetupAddress"
+                    name="address"
                     fullWidth
                     InputProps={{
                         readOnly: true

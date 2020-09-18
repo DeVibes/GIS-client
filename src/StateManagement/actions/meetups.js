@@ -1,6 +1,6 @@
 import store from '../store'
 
-export const setMeetupsAction = meetups => {
+export const setMeetups = meetups => {
     console.log(`USER MEETUPS STATE CHANGED (SET)`)
     console.log(meetups)
     store.dispatch({
@@ -15,5 +15,22 @@ export const addMeetup = meetup => {
     store.dispatch({
         type: `ADD_MEETUP`,
         payload: meetup
+    })
+}
+
+export const removeMeetup = meetupId => {
+    console.log(`Redux ~ removing meetup ${meetupId}`)
+    store.dispatch({
+        type: `DELETE_MEETUP`,
+        payload: meetupId
+    })
+}
+
+export const updateMeetup = updatedMeetup => {
+    console.log(`Redux ~ updating meetup ${updatedMeetup._id}`)
+    console.log(updatedMeetup)
+    store.dispatch({
+        type: `UPDATE_MEETUP`,
+        payload: updatedMeetup
     })
 }

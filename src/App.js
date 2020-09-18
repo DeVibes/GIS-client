@@ -5,7 +5,7 @@ import { Route, Switch, BrowserRouter } from "react-router-dom";
 
 /* Components */
 import { LoginPage } from './Pages/LoginPage'
-import { MapPage } from './Pages/MapPage'
+import { ProtectedMapPage } from './Pages/ProtectedMapPage'
 
 /* Redux */
 import store from './StateManagement/store'
@@ -17,7 +17,7 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={LoginPage} />
-          <Route exact path="/map" component={MapPage} />
+          <Route exact path="/map" component={ProtectedMapPage} />
         </Switch>
       </BrowserRouter>
     </Provider> 

@@ -14,12 +14,12 @@ import PersonIcon from '@material-ui/icons/Person';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
 /* Redux */
-import { setUsername, setPassword } from '../StateManagement/actions/loginData'
+import { setLoginData } from '../StateManagement/actions/loginData'
 import { setSnack } from '../StateManagement/actions/snackPopup'
 import { setUserData } from '../StateManagement/actions/userData'
 
 /* Services */
-import { getUserByUsername } from '../Services/GetUserByUsername'
+import { authUser } from '../Services/Users'
 
 /* Validation */
 import { isUsernameValid, isPasswordValid } from '../Validation/userValidation';
@@ -28,58 +28,52 @@ export const LoginStep = ({ stepChange }) => {
     let loginData = useSelector(({ loginData }) => loginData)
     let history = useHistory()
 
-    // True means error
     const [inputValidator, setInputValidator] = useState({
-        username: Boolean(loginData.username) ? false : null, 
+        username: Boolean(loginData?.username) ? true : null, 
         password: null,
     })
 
     const isFormValid = () => {
         return Object.keys(inputValidator).every((key) => {
-            if (inputValidator[key] !== false) {
+            if (inputValidator[key] !== true) {
                 setInputValidator({
                     ...inputValidator,
-                    [key]: true
+                    [key]: false
                 })
             }
-            return inputValidator[key] === false
+            return inputValidator[key] === true
         })
     }
 
     const handleInputChange = (e) => {
         let { name, value } = e.target
+        let isValid
 
         switch (name) {
             case `username`:
-                if (isUsernameValid(value))
-                    setInputValidator({...inputValidator, [name]: false})
-                else 
-                    setInputValidator({...inputValidator, [name]: true})
-                setUsername(value)
+                isValid = isUsernameValid(value)
                 break;
             case `password`:
-                if (isPasswordValid(value))
-                    setInputValidator({...inputValidator, [name]: false})
-                else 
-                    setInputValidator({...inputValidator, [name]: true}) 
-                setPassword(value)
+                isValid = isPasswordValid(value)
                 break;
             default: break;
         }
+        setInputValidator({...inputValidator, [name]: isValid})
+        setLoginData({
+            ...loginData,
+            [name]: value
+        })
     }
 
     const handleSubmit = async () => {  
         if (isFormValid()) {
             try {
-                const userResponse = await getUserByUsername(loginData.username, loginData.password)
-                setUserData({
-                    username: userResponse.username,
-                    personName: userResponse.personName,
-                    phone: userResponse.phone,
-                })
+                const userResponse = await authUser(loginData.username, loginData.password)
+                localStorage.setItem(`loginUser`, userResponse.username)
+                setLoginData(null)
                 setSnack({
                     isSnackOpen: true,
-                    msg: userResponse.message,
+                    msg: `Hi ${userResponse.personName}`,
                     isError: false
                 })
                 history.push(`/map`)
@@ -109,7 +103,9 @@ export const LoginStep = ({ stepChange }) => {
                         <TextField
                             margin="dense"
                             label="Username"
-                            error={inputValidator.username || false}
+                            error={
+                                inputValidator.username == null ? false : !inputValidator.username
+                            }
                             type="text"
                             name="username"
                             fullWidth
@@ -126,7 +122,9 @@ export const LoginStep = ({ stepChange }) => {
                         <TextField
                             margin="dense"
                             label="Password"
-                            error={inputValidator.password || false}
+                            error={
+                                inputValidator.password == null ? false : !inputValidator.password
+                            }
                             type="password"
                             name="password"
                             fullWidth

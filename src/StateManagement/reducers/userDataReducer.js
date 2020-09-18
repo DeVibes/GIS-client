@@ -1,12 +1,12 @@
 export const initialDataState = {
     username: ``,
-    meetups: [],
+    // meetups: [],
     personName: ``,
     phone: ``,
     address: ``,
     coords: {
-        lat: ``,
-        lng: ``
+        lat: 0,
+        lng: 0
     }
 }
 
@@ -16,14 +16,17 @@ export const userDataReducer = (state = initialDataState, action) => {
             return {...state, coords: action.payload }
         case `SET_MEETUPS`:
             return {...state, meetups: action.payload }
-        case `ADD_MEETUP`:
-            return {...state, meetups: [...state.meetups, action.payload] }
+        // case `ADD_MEETUP`:
+        //     debugger
+        //     let meetups = state.meetups
+        //     meetups.push(action.payload)
+        //     return {...state, meetups: meetups }
         case `SET_PERSON_NAME`:
-            return { ...state, coords: action.payload }
+            return { ...state, personName: action.payload }
         case `SET_USER_PHONE`:
-            return { ...state, coords: action.payload }
+            return { ...state, phone: action.payload }
         case `SET_USER_ADDRESS`:
-            return { ...state, coords: action.payload }
+            return { ...state, address: action.payload }
         case `SET_USER_COORDS`:
             return { ...state, coords: action.payload }
         case `SET_USER_DATA`:

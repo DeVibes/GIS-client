@@ -9,14 +9,14 @@ import { MeetupCategories } from '../Data/MeetupCategories'
 import { SnackbarPopup } from '../Global/SnackbarPopup';
 
 /* Redux */
-import { setMeetup } from '../StateManagement/actions/selectedMeetup'
+import { setSelectedMeetup } from '../StateManagement/actions/selectedMeetup'
 import { setIsDialogOpen } from '../StateManagement/actions/isDialogOpen'
 import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
-import { setUserCoords } from '../StateManagement/actions/userData'
 import { setSnackState } from '../StateManagement/actions/snackPopup'
 
 /* Services */
-import { getAddressByCoords } from '../Services/GetAddressByCoords'
+import { getAddressByCoords } from '../Services/GoogleAPI'
+import { getUserDataByUsername } from '../Services/Users'
 
 const googleMapLibraries = [`places`]
 const mapContainerStyle = {
@@ -25,18 +25,14 @@ const mapContainerStyle = {
 }
 
 export const MapPage = () => {
-    const snackPopup = useSelector(({ snackPopup }) => snackPopup)
-
     useEffect(() => {
         //TODO Get current location from browser
-        setUserCoords({
-            lat: 31.963358630236876,
-            lng: 34.80391502380371
-        })
+        let loggedUser = localStorage.getItem("loginUser")
+        getUserDataByUsername(loggedUser)
     }, [])
     
-    let userLocation = useSelector(({ userData }) => userData.coords)
-
+    const snackPopup = useSelector(({ snackPopup }) => snackPopup)
+    const userData = useSelector(({ userData }) => userData)
 
     /* Handlers */
     const handleSnackClose = () => setSnackState(false)
@@ -50,14 +46,16 @@ export const MapPage = () => {
             console.log(`Got address! ${address}`)
             let currentDate = new Date().toISOString()
             currentDate = currentDate.substring(0, currentDate.indexOf(':', currentDate.indexOf(':')+1))
-            setMeetup({
+            setSelectedMeetup({
                 category: MeetupCategories[0].value,
                 address: address,
                 coords: {
                     lat: lat,
                     lng: lng
                 },
-                date: currentDate
+                date: currentDate,
+                admin: userData.username,
+                attendants: [userData.username]
             })
             setIsPopupOpen(false)
             setIsDialogOpen(true)
@@ -74,7 +72,7 @@ export const MapPage = () => {
         >
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
-                center={userLocation}
+                center={userData.coords}
                 zoom={15}
                 onClick={(event) =>{handleMapClick(event)}}
             >

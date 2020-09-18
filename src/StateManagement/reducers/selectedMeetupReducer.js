@@ -6,7 +6,10 @@ export const initialMeetupState = {
     coords: {
         lat: 0,
         lng: 0
-    }
+    },
+    admin: ``,
+    attendants: [],
+    maxAttendants: 0
 }
 
 export const selectedMeetupReducer = (state = initialMeetupState, action) => {
@@ -35,6 +38,30 @@ export const selectedMeetupReducer = (state = initialMeetupState, action) => {
             return {
                 ...state,
                 latLng: action.payload
+            }
+        case `SET_MEETUP_ADMIN`:
+            return {
+                ...state,
+                admin: action.payload
+            }
+        case `SET_MEETUP_MAX_ATTANDANTS`:
+            return {
+                ...state,
+                latLng: action.payload
+            }
+        case `SET_MEETUP_ATTENDANTS`:
+            if (Boolean(action.payload)) {
+                return {
+                    ...state,
+                    attendants: [...state.attendants, action.payload]
+                }
+            }
+            else {
+                let newAttendants = state.attendants.filter(attendant => attendant !== action.payload)
+                return { 
+                    ...state,
+                    attendants: newAttendants
+                }
             }
         case `SET_MEETUP`:
             return action.payload;

@@ -15,16 +15,11 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 /* Redux */
-import { setUsername,
-    setPassword,
-    setName,
-    setPhone,
-    setLoginData,
-} from '../StateManagement/actions/loginData'
+import { setPassword, setLoginData } from '../StateManagement/actions/loginData'
 import { setSnack } from '../StateManagement/actions/snackPopup'
 
 /* Services */
-import { createNewUser } from '../Services/CreateNewUser'
+import { createNewUser } from '../Services/Users'
 
 /* Validation */
 import { isUsernameValid,
@@ -43,7 +38,6 @@ const fields = {
 export const RegisterStep = ({ stepChange }) => {
     let loginData = useSelector(({ loginData }) => loginData)
 
-    /// True means error
     const [inputValidator, setInputValidator] = useState({
         username: null,
         password: null,
@@ -54,50 +48,40 @@ export const RegisterStep = ({ stepChange }) => {
 
     const isFormValid = () => {
         return Object.keys(inputValidator).every((key) => {
-            if (inputValidator[key] !== false) {
+            if (inputValidator[key] !== true) {
                 setInputValidator({
                     ...inputValidator,
-                    [key]: true
+                    [key]: false
                 })
             }
-            return inputValidator[key] === false
+            return inputValidator[key] === true
         })
     }
 
     const handleInputChange = (e) => {
         let { name, value } = e.target
+        let isValid
 
         switch (name) {
             case fields.username:
-                if (isUsernameValid(value))
-                    setInputValidator({...inputValidator, [name]: false})
-                else 
-                    setInputValidator({...inputValidator, [name]: true})
-                setUsername(value)
+                isValid = isUsernameValid(value)
                 break;
             case fields.password:
-                if (isPasswordValid(value))
-                    setInputValidator({...inputValidator, [name]: false})
-                else 
-                    setInputValidator({...inputValidator, [name]: true})
-                setPassword(value)
+                isValid = isPasswordValid(value)
                 break;
             case fields.personName:
-                if (isNameValid(value))
-                    setInputValidator({...inputValidator, [name]: false})
-                else 
-                    setInputValidator({...inputValidator, [name]: true})
-                setName(value)
+                isValid = isNameValid(value)
                 break;
             case fields.phone:
-                if (isPhoneValid(value))
-                    setInputValidator({...inputValidator, [name]: false})
-                else 
-                    setInputValidator({...inputValidator, [name]: true})
-                setPhone(value)
+                isValid = isPhoneValid(value)
                 break;
             default: break; 
         }
+        setInputValidator({...inputValidator, [name]: isValid})
+        setLoginData({
+            ...loginData,
+            [name]: value
+        })
     }
 
     const handleSubmit = async() => {
@@ -136,7 +120,9 @@ export const RegisterStep = ({ stepChange }) => {
                         <TextField
                             margin="dense"
                             label="Username"
-                            error={inputValidator.username || false}
+                            error={
+                                inputValidator.username == null ? false : !inputValidator.username
+                            }
                             type="text"
                             name={fields.username}
                             fullWidth
@@ -152,7 +138,9 @@ export const RegisterStep = ({ stepChange }) => {
                         <TextField
                             margin="dense"
                             label="Password"
-                            error={inputValidator.password || false}
+                            error={
+                                inputValidator.password == null ? false : !inputValidator.password
+                            }
                             type="password"
                             name={fields.password}
                             fullWidth
@@ -168,7 +156,9 @@ export const RegisterStep = ({ stepChange }) => {
                         <TextField
                             margin="dense"
                             label="Name"
-                            error={inputValidator.personName || false}
+                            error={
+                                inputValidator.personName == null ? false : !inputValidator.personName
+                            }
                             type="text"
                             name={fields.personName}
                             fullWidth
@@ -184,7 +174,9 @@ export const RegisterStep = ({ stepChange }) => {
                         <TextField
                             margin="dense"
                             label="Phone"
-                            error={inputValidator.phone || false}
+                            error={
+                                inputValidator.phone == null ? false : !inputValidator.phone
+                            }
                             type="text"
                             name={fields.phone}
                             fullWidth

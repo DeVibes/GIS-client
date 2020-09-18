@@ -1,11 +1,11 @@
-export const initialDataState = {
+export const initialLoginDataState = {
     username: ``,
     password: ``,
     personName: ``,
     phone: ``,
 }
 
-export const loginDataReducer = (state = initialDataState, action) => {
+export const loginDataReducer = (state = initialLoginDataState, action) => {
     switch (action.type) {
         case `SET_USERNAME`:
             return {...state, username: action.payload }

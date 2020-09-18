@@ -6,7 +6,7 @@ export const isNameValid = (name) => nameRegex.test(name)
 
 export const isPhoneValid = (phone) => phoneRegex.test(phone)
 
-const usernameRegex = new RegExp(`^[a-zA-Z0-9]{8,20}$`) 
-const passwordRegex = new RegExp(`^[a-zA-Z0-9]{8,20}$`) 
+const usernameRegex = new RegExp(`^[a-zA-Z0-9]{4,10}$`) 
+const passwordRegex = new RegExp(`^[a-zA-Z0-9]{4,10}$`) 
 const nameRegex = new RegExp(`^[a-zA-Z0-9_-]{1,20}$`) 
 const phoneRegex = new RegExp(`^[0-9]{10}$`) 
