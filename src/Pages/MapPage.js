@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { LoadScript, GoogleMap }from '@react-google-maps/api'
+import { MapHeader } from '../Global/MapHeader'
 
 /* Components */
 import { MapLayer } from '../Map/MapLayer'
@@ -66,24 +67,27 @@ export const MapPage = () => {
     }
 
     return (
-        <LoadScript
-            googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-            libraries={googleMapLibraries}
-        >
-            <GoogleMap
-                mapContainerStyle={mapContainerStyle}
-                center={userData.coords}
-                zoom={15}
-                onClick={(event) =>{handleMapClick(event)}}
-            >
-                <MapLayer/>
-                <SnackbarPopup 
-                    open={snackPopup.isSnackOpen} 
-                    onClose={handleSnackClose} 
-                    severity={snackPopup.isError}
-                    text={snackPopup.msg}
-                />
-            </GoogleMap>
-        </LoadScript>
+        <>
+            <MapHeader/>
+            <LoadScript
+                googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+                libraries={googleMapLibraries}
+                >
+                <GoogleMap
+                    mapContainerStyle={mapContainerStyle}
+                    center={userData.coords}
+                    zoom={15}
+                    onClick={(event) =>{handleMapClick(event)}}
+                    >
+                    <MapLayer/>
+                </GoogleMap>
+            </LoadScript>
+            <SnackbarPopup 
+                open={snackPopup.isSnackOpen} 
+                onClose={handleSnackClose} 
+                severity={snackPopup.isError}
+                text={snackPopup.msg}
+            />
+        </>
     )
 }

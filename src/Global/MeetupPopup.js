@@ -13,6 +13,7 @@ import { initialMeetupState } from '../StateManagement/reducers/selectedMeetupRe
 import { setSelectedMeetup } from "../StateManagement/actions/selectedMeetup";
 import { updateMeetup } from "../StateManagement/actions/meetups"
 import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
+import { setSnack } from '../StateManagement/actions/snackPopup'
 
 /* Services */
 import { editMeetup } from '../Services/Meetups'
@@ -64,17 +65,25 @@ export const MeetupPopup = () => {
 
     const handleAttendance = async (isAttending) => {
         let meetupAttendants = clickedMeetup.attendants
+        let msg
         if (isAttending) {
             meetupAttendants.push(currentUser)
+            msg = `Registered for this meetup`
         }
         else {
             meetupAttendants = meetupAttendants.filter(attendant => attendant !== currentUser)
+            msg = `Unregistered for this meetup`
         }
         const updatedMeetup = await editMeetup(clickedMeetup._id, { 
             attendants: meetupAttendants 
         })
         updateMeetup(updatedMeetup)
         setSelectedMeetup(updatedMeetup)
+        setSnack({
+            isSnackOpen: true,
+            msg: msg,
+            isError: false
+        })
     }
 
     return (
