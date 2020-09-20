@@ -53,6 +53,10 @@ const styles = makeStyles((theme) => ({
     drawerPaper: {
         width: drawerWidth,
     },
+    searchContainter: {
+        display: 'flex',
+        alignItems: 'center',
+    },
     search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
@@ -67,15 +71,6 @@ const styles = makeStyles((theme) => ({
           marginLeft: theme.spacing(3),
           width: 'auto',
         },
-    },
-    searchIcon: {
-        padding: theme.spacing(0, 2),
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     inputRoot: {
         color: 'inherit',
@@ -186,26 +181,27 @@ export const MapHeader = ({ recenterMap }) => {
                     >
                         <MenuIcon/>
                     </IconButton>
-                    <div className={classes.search}>
-                        <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            onChange={handleSearchChange}
-                        />
+                    <div className={classes.searchContainter}>
+                        <div className={classes.search}>
+                            <InputBase
+                                placeholder="Search…"
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{ 'aria-label': 'search' }}
+                                onChange={handleSearchChange}
+                                />
+                        </div>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            edge="end"
+                            onClick={handleSearchClick}
+                        >
+                            <SearchIcon/>
+                        </IconButton>
                     </div>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        edge="end"
-                        onClick={handleSearchClick}
-                        // className={classes.menuButton}
-                    >
-                        <SearchIcon/>
-                    </IconButton>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
