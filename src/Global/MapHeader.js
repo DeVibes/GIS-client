@@ -1,5 +1,6 @@
 /* Libraries */
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { AppBar, 
     Toolbar, 
     IconButton, 
@@ -15,6 +16,14 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+
+/* Redux */
+import { updateSearchString } from '../StateManagement/actions/searchQuery'
+import { updateSearchResults } from '../StateManagement/actions/searchQuery'
+import { setSnack } from '../StateManagement/actions/snackPopup'
+
+/* Services */
+import { getAddressByString } from '../Services/GoogleAPI'
 
 const drawerWidth = 240
 
@@ -74,7 +83,7 @@ const styles = makeStyles((theme) => ({
     inputInput: {
         padding: theme.spacing(1, 1, 1, 0),
         // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        paddingLeft: `calc(1em + ${theme.spacing(1)}px)`,
         transition: theme.transitions.create('width'),
         width: '100%',
         [theme.breakpoints.up('md')]: {
@@ -125,9 +134,12 @@ const DrawerBody = () => {
     )
 }
 
-export const MapHeader = () => {
+export const MapHeader = ({ recenterMap }) => {
     const [mobileOpen, setMobileOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
+
+    const searchQuery = useSelector(({ searchQuery }) => searchQuery)
+
     const classes = styles()
 
     const handleDrawerToggle = () => setMobileOpen(!mobileOpen)
@@ -136,9 +148,28 @@ export const MapHeader = () => {
 
     const handleAccountClose = () => setAnchorEl(null)
 
+    //TODO
     const handleLogOut = () => {
         console.log(`logging out ...`)
         setAnchorEl(null)
+    }
+
+    const handleSearchChange = event => updateSearchString(event.target.value)
+
+    const handleSearchClick = async () => {
+        console.log(`Searching ${searchQuery.searchString}`)
+        try {
+            const addresses = await getAddressByString(searchQuery.searchString)
+            updateSearchResults(addresses)
+            recenterMap(addresses[0].geometry.location)
+            
+        } catch ({ message }) {
+            setSnack({
+                isSnackOpen: true,
+                msg: message,
+                isError: true
+            })
+        }
     }
 
     return (
@@ -156,9 +187,6 @@ export const MapHeader = () => {
                         <MenuIcon/>
                     </IconButton>
                     <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
-                        </div>
                         <InputBase
                             placeholder="Search…"
                             classes={{
@@ -166,8 +194,18 @@ export const MapHeader = () => {
                                 input: classes.inputInput,
                             }}
                             inputProps={{ 'aria-label': 'search' }}
+                            onChange={handleSearchChange}
                         />
                     </div>
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        edge="end"
+                        onClick={handleSearchClick}
+                        // className={classes.menuButton}
+                    >
+                        <SearchIcon/>
+                    </IconButton>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"

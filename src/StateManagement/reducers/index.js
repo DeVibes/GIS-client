@@ -7,6 +7,7 @@ import { meetupsReducer } from "./meetupsReducer"
 import { selectedMeetupReducer } from "./selectedMeetupReducer"
 import { snackReducer } from "./snackReducer"
 import { userDataReducer } from "./userDataReducer"
+import { searchQueryReducer } from "./searchQueryReducer"
 
 export default combineReducers({
     meetups: meetupsReducer,
@@ -16,5 +17,6 @@ export default combineReducers({
     isDialogOpen: dialogReducer,
     isPopupOpen: popupReducer,
     snackPopup: snackReducer,
+    searchQuery: searchQueryReducer
 })
 

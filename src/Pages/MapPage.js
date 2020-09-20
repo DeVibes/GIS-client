@@ -1,5 +1,5 @@
 /* Libraries */
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { LoadScript, GoogleMap }from '@react-google-maps/api'
 import { MapHeader } from '../Global/MapHeader'
@@ -26,15 +26,25 @@ const mapContainerStyle = {
 }
 
 export const MapPage = () => {
+    const userData = useSelector(({ userData }) => userData)
+    const snackPopup = useSelector(({ snackPopup }) => snackPopup)
+
     useEffect(() => {
         //TODO Get current location from browser
         let loggedUser = localStorage.getItem("loginUser")
         getUserDataByUsername(loggedUser)
     }, [])
-    
-    const snackPopup = useSelector(({ snackPopup }) => snackPopup)
-    const userData = useSelector(({ userData }) => userData)
 
+    const mapRef = useRef()
+    const onMapLoad = React.useCallback((map) => {
+        mapRef.current = map;
+      }, []);
+    
+    const recenterMap = React.useCallback((firstAddress) => {
+      mapRef.current.panTo(firstAddress);
+      mapRef.current.setZoom(17);
+    }, []);
+    
     /* Handlers */
     const handleSnackClose = () => setSnackState(false)
 
@@ -68,13 +78,15 @@ export const MapPage = () => {
 
     return (
         <>
-            <MapHeader/>
+            <MapHeader recenterMap={recenterMap}/>
             <LoadScript
                 googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
                 libraries={googleMapLibraries}
                 >
                 <GoogleMap
+                    id="map"
                     mapContainerStyle={mapContainerStyle}
+                    onLoad={onMapLoad}
                     center={userData.coords}
                     zoom={15}
                     onClick={(event) =>{handleMapClick(event)}}

@@ -17,6 +17,7 @@ import { initialMeetupState } from '../StateManagement/reducers/selectedMeetupRe
 /* Redux */
 import { setSelectedMeetup } from '../StateManagement/actions/selectedMeetup'
 import { setIsDialogOpen } from "../StateManagement/actions/isDialogOpen";
+import { resetSearchQuery } from "../StateManagement/actions/searchQuery";
 
 /* Services */
 import { postNewMeetup } from '../Services/Meetups'
@@ -74,8 +75,10 @@ export const MeetupDialog = () => {
 
     const handleSubmit = async () => {
         if (isFormValid()) {
-            if (await postNewMeetup(selectedMeetup))
+            if (await postNewMeetup(selectedMeetup)) {
+                resetSearchQuery()
                 handleClose()
+            }
         }
     }
 
