@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 /* Components */
 import { LoginForm } from '../Login/LoginForm'
-import { BackgroundLoop } from '../Global/BackgroundLoop'
+import { BackgroundLoop } from '../Login/BackgroundLoop'
 import { SnackbarPopup } from '../Global/SnackbarPopup';
 
 /* Functions */

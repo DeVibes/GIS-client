@@ -11,9 +11,9 @@ import { setSelectedMeetup } from '../StateManagement/actions/selectedMeetup'
 import { setIsDialogOpen } from '../StateManagement/actions/isDialogOpen'
 
 export const MeetupSearchPins = () => {
+    /* Redux states */
     const searchResults = useSelector(({ searchQuery }) => searchQuery.searchResults)
     const userData = useSelector(({ userData }) => userData)
-
 
     const onPinClick = (pinData) => {
         let currentDate = new Date().toISOString()

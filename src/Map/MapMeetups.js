@@ -11,6 +11,7 @@ import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
 import { getAllMeetups } from '../Services/Meetups'
 
 export const MapMeetups = () => {
+    /* Redux states */
     let meetups = useSelector(({ meetups }) => meetups)
 
     useEffect(() => {

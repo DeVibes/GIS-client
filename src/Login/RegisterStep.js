@@ -35,32 +35,51 @@ const fields = {
     phone: `phone`,
 }
 
+const initialInputValidationState = {
+    username: {
+        isValid: null,
+        message: null
+    },
+    password: {
+        isValid: null,
+        message: null
+    },
+    personName: {
+        isValid: null,
+        message: null
+    },
+    phone: {
+        isValid: null,
+        message: null
+    }
+}
+
 export const RegisterStep = ({ stepChange }) => {
+    /* Redux states */
     let loginData = useSelector(({ loginData }) => loginData)
 
-    const [inputValidator, setInputValidator] = useState({
-        username: null,
-        password: null,
-        personName: null,
-        phone: null
-    })
-
+    /* Local states */
+    const [inputValidator, setInputValidator] = useState(initialInputValidationState)
 
     const isFormValid = () => {
         return Object.keys(inputValidator).every((key) => {
-            if (inputValidator[key] !== true) {
+            if (!Boolean(inputValidator[key].isValid)) {
                 setInputValidator({
                     ...inputValidator,
-                    [key]: false
+                    [key]: {
+                        isValid: false,
+                        errorMessage: `Empty field`
+                    }
                 })
             }
-            return inputValidator[key] === true
+            return inputValidator[key].isValid === true
         })
     }
 
     const handleInputChange = (e) => {
         let { name, value } = e.target
-        let isValid
+        let isValid = true
+        let errorMessage = null
 
         switch (name) {
             case fields.username:
@@ -77,7 +96,13 @@ export const RegisterStep = ({ stepChange }) => {
                 break;
             default: break; 
         }
-        setInputValidator({...inputValidator, [name]: isValid})
+        if (!isValid) errorMessage = `Incorrect value`
+        setInputValidator({
+            ...inputValidator, 
+            [name]: {
+                isValid: isValid,
+                errorMessage: errorMessage
+            }})
         setLoginData({
             ...loginData,
             [name]: value
@@ -94,6 +119,7 @@ export const RegisterStep = ({ stepChange }) => {
                     isError: false
                 })
                 setPassword("")
+                setInputValidator(initialInputValidationState)
                 stepChange(1)
             } catch ({ message }) {
                 console.log(message)
@@ -121,8 +147,9 @@ export const RegisterStep = ({ stepChange }) => {
                             margin="dense"
                             label="Username"
                             error={
-                                inputValidator.username == null ? false : !inputValidator.username
+                                inputValidator.username.isValid == null ? false : !inputValidator.username.isValid
                             }
+                            helperText={inputValidator.username.errorMessage}
                             type="text"
                             name={fields.username}
                             fullWidth
@@ -139,8 +166,9 @@ export const RegisterStep = ({ stepChange }) => {
                             margin="dense"
                             label="Password"
                             error={
-                                inputValidator.password == null ? false : !inputValidator.password
+                                inputValidator.password.isValid == null ? false : !inputValidator.password.isValid
                             }
+                            helperText={inputValidator.password.errorMessage}
                             type="password"
                             name={fields.password}
                             fullWidth
@@ -157,8 +185,9 @@ export const RegisterStep = ({ stepChange }) => {
                             margin="dense"
                             label="Name"
                             error={
-                                inputValidator.personName == null ? false : !inputValidator.personName
+                                inputValidator.personName.isValid == null ? false : !inputValidator.personName.isValid
                             }
+                            helperText={inputValidator.personName.errorMessage}
                             type="text"
                             name={fields.personName}
                             fullWidth
@@ -175,8 +204,9 @@ export const RegisterStep = ({ stepChange }) => {
                             margin="dense"
                             label="Phone"
                             error={
-                                inputValidator.phone == null ? false : !inputValidator.phone
+                                inputValidator.phone.isValid == null ? false : !inputValidator.phone.isValid
                             }
+                            helperText={inputValidator.phone.errorMessage}
                             type="text"
                             name={fields.phone}
                             fullWidth

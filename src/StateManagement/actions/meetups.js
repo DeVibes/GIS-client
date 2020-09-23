@@ -1,7 +1,7 @@
 import store from '../store'
 
 export const setMeetups = meetups => {
-    console.log(`USER MEETUPS STATE CHANGED (SET)`)
+    console.log(`Redux ~ setting map meetups`)
     console.log(meetups)
     store.dispatch({
         type: `SET_MEETUPS`,
@@ -10,7 +10,7 @@ export const setMeetups = meetups => {
 }
 
 export const addMeetup = meetup => {
-    console.log(`USER MEETUPS STATE CHANGED (ADD)`)
+    console.log(`Redux ~ adding meetup`)
     console.log(meetup)
     store.dispatch({
         type: `ADD_MEETUP`,

@@ -2,9 +2,9 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { LoadScript, GoogleMap }from '@react-google-maps/api'
-import { MapHeader } from '../Global/MapHeader'
 
 /* Components */
+import { MapHeader } from '../Map/MapHeader'
 import { MapLayer } from '../Map/MapLayer'
 import { MeetupCategories } from '../Data/MeetupCategories'
 import { SnackbarPopup } from '../Global/SnackbarPopup';

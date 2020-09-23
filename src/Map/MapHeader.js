@@ -7,20 +7,23 @@ import { AppBar,
     Hidden, 
     CssBaseline, 
     Drawer, 
-    Typography, 
     InputBase,
     Menu,
-    MenuItem 
+    MenuItem, Divider 
 } from '@material-ui/core/';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
+/* Components */
+import { MapDrawer } from './MapDrawer'
+
 /* Redux */
 import { updateSearchString } from '../StateManagement/actions/searchQuery'
 import { updateSearchResults } from '../StateManagement/actions/searchQuery'
 import { setSnack } from '../StateManagement/actions/snackPopup'
+import { setIsProfileOpen } from '../StateManagement/actions/isProfileOpen'
 
 /* Services */
 import { getAddressByString } from '../Services/GoogleAPI'
@@ -85,6 +88,20 @@ const styles = makeStyles((theme) => ({
           width: '20ch',
         },
     },
+    newInput: {
+        marginLeft: theme.spacing(1),
+        padding: theme.spacing(1, 1, 1, 0),
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+          backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        width: '100%',
+
+    },
+    divider: {
+        height: 28,
+        margin: 4,
+    },
 }))
 
 const DrawerWrapper = ({children, mobileOpen, handleDrawerToggle}) => {
@@ -121,14 +138,6 @@ const DrawerWrapper = ({children, mobileOpen, handleDrawerToggle}) => {
     )
 }
 
-const DrawerBody = () => {
-    return (
-        <>
-            Drawer!
-        </>
-    )
-}
-
 export const MapHeader = ({ recenterMap }) => {
     const [mobileOpen, setMobileOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
@@ -143,10 +152,15 @@ export const MapHeader = ({ recenterMap }) => {
 
     const handleAccountClose = () => setAnchorEl(null)
 
+    const handleProfileClick = () => {
+        handleAccountClose()
+        setIsProfileOpen(true)
+    }
+
     //TODO
     const handleLogOut = () => {
         console.log(`logging out ...`)
-        setAnchorEl(null)
+        handleAccountClose()
     }
 
     const handleSearchChange = event => updateSearchString(event.target.value)
@@ -202,6 +216,25 @@ export const MapHeader = ({ recenterMap }) => {
                             <SearchIcon/>
                         </IconButton>
                     </div>
+                    {/* <div className={classes.searchContainter}>
+                        <InputBase
+                            placeholder="Search address"
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.newInput
+                            }}
+                        >
+                        </InputBase>
+                        <Divider className={classes.divider} orientation="vertical"/>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            edge="end"
+                            onClick={handleSearchClick}
+                        >
+                            <SearchIcon/>
+                        </IconButton>
+                    </div> */}
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -216,7 +249,7 @@ export const MapHeader = ({ recenterMap }) => {
                         open={Boolean(anchorEl)}
                         onClose={handleAccountClose}
                     >
-                        <MenuItem>Profile</MenuItem>
+                        <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
                         <MenuItem onClick={handleLogOut}>Log out</MenuItem>
                     </Menu>
                 </Toolbar>
@@ -225,7 +258,7 @@ export const MapHeader = ({ recenterMap }) => {
                 handleDrawerToggle={handleDrawerToggle}
                 mobileOpen={mobileOpen}
             >
-                <DrawerBody/>
+                <MapDrawer/>
             </DrawerWrapper>
         </>
     )

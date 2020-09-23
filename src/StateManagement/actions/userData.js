@@ -1,35 +1,32 @@
 import store from '../store'
 
-export const setUserName = coords => {
-    console.log(`USER COORDS STATE CHANGED`)
-    console.log(coords)
+export const setUserId = id => {
+    console.log(`Redux ~ setting user id ${id}`)
     store.dispatch({
-        type: `SET_USER_COORDS`,
-        payload: coords
+        type: `SET_USER_ID`,
+        payload: id
     })
 }
 
-export const setUserMeetups = meetups => {
-    console.log(`USER MEETUPS STATE CHANGED (SET)`)
-    console.log(meetups)
+export const setUserName = username => {
+    console.log(`Redux ~ setting user name ${username}`)
     store.dispatch({
-        type: `SET_MEETUPS`,
-        payload: [...meetups]
+        type: `SET_USERNAME`,
+        payload: username
     })
 }
 
-export const addUserMeetup = meetup => {
-    console.log(`USER MEETUPS STATE CHANGED (ADD)`)
-    console.log(meetup)
+export const setUserSavedAddress = addresses => {
+    console.log(`Redux ~ setting user saved addresses`)
+    console.log([...addresses])
     store.dispatch({
-        type: `ADD_MEETUP`,
-        payload: meetup
+        type: `SET_SAVED_ADDRESSES`,
+        payload: [...addresses]
     })
 }
 
 export const setPersonName = name => {
-    console.log(`PERSON NAME STATE CHANGED`)
-    console.log(name)
+    console.log(`Redux ~ setting user person name ${name}`)
     store.dispatch({
         type: `SET_PERSON_NAME`,
         payload: name
@@ -37,8 +34,7 @@ export const setPersonName = name => {
 }
 
 export const setUserPhone = phone => {
-    console.log(`USER PHONE STATE CHANGED`)
-    console.log(phone)
+    console.log(`Redux ~ setting user phone ${phone}`)
     store.dispatch({
         type: `SET_USER_PHONE`,
         payload: phone
@@ -46,8 +42,7 @@ export const setUserPhone = phone => {
 }
 
 export const setUserAddress = address => {
-    console.log(`USER ADDRESS STATE CHANGED`)
-    console.log(address)
+    console.log(`Redux ~ setting user address ${address}`)
     store.dispatch({
         type: `SET_USER_COORDS`,
         payload: address
@@ -55,7 +50,7 @@ export const setUserAddress = address => {
 }
 
 export const setUserCoords = coords => {
-    console.log(`USER COORDS STATE CHANGED`)
+    console.log(`Redux ~ setting user coords`)
     console.log(coords)
     store.dispatch({
         type: `SET_USER_COORDS`,
@@ -64,7 +59,7 @@ export const setUserCoords = coords => {
 }
 
 export const setUserData = data => {
-    console.log(`USER DATA STATE CHANGED`)
+    console.log(`Redux ~ setting user data`)
     console.log(data)
     store.dispatch({
         type: `SET_USER_DATA`,

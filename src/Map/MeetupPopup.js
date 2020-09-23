@@ -52,6 +52,7 @@ const useStyles = makeStyles({
 })
 
 export const MeetupPopup = () => {
+    /* Redux states */
     let clickedMeetup = useSelector(({ selectedMeetup }) => selectedMeetup)
     let currentUser = useSelector(({ userData }) => userData.username)
     let isOpen = useSelector(({ isPopupOpen }) => isPopupOpen)

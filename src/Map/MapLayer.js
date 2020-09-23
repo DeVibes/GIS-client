@@ -3,9 +3,10 @@ import React from 'react'
 
 /* Components */
 import { MapMeetups } from './MapMeetups'
-import { MeetupDialog } from '../Global/MeetupDialog'
-import { MeetupPopup } from '../Global/MeetupPopup'
+import { MeetupDialog } from './MeetupDialog'
+import { MeetupPopup } from './MeetupPopup'
 import { MeetupSearchPins } from './MeetupSearchPins'
+import { ProfileDialog } from './ProfileDialog'
 
 export const MapLayer = () => (
     <>
@@ -13,5 +14,6 @@ export const MapLayer = () => (
         <MeetupDialog/>
         <MeetupPopup/>
         <MeetupSearchPins/>
+        <ProfileDialog/>
     </>
 )

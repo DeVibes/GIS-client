@@ -25,29 +25,44 @@ import { authUser } from '../Services/Users'
 import { isUsernameValid, isPasswordValid } from '../Validation/userValidation';
 
 export const LoginStep = ({ stepChange }) => {
+    /* Redux states */
     let loginData = useSelector(({ loginData }) => loginData)
-    let history = useHistory()
+    
+    const initialInputValidationState = {
+        username: {
+            isValid: Boolean(loginData?.username) ? true : null,
+            errorMessage: null
+        }, 
+        password: {
+            isValid: null,
+            errorMessage: null
+        },
+    }
 
-    const [inputValidator, setInputValidator] = useState({
-        username: Boolean(loginData?.username) ? true : null, 
-        password: null,
-    })
+    /* Local states */
+    const [inputValidator, setInputValidator] = useState(initialInputValidationState)
+
+    let history = useHistory()
 
     const isFormValid = () => {
         return Object.keys(inputValidator).every((key) => {
-            if (inputValidator[key] !== true) {
+            if (!Boolean(inputValidator[key].isValid)) {
                 setInputValidator({
                     ...inputValidator,
-                    [key]: false
+                    [key]: {
+                        isValid: false,
+                        errorMessage: `Empty field`
+                    }
                 })
             }
-            return inputValidator[key] === true
+            return inputValidator[key].isValid === true
         })
     }
 
     const handleInputChange = (e) => {
         let { name, value } = e.target
-        let isValid
+        let isValid = true
+        let errorMessage = null
 
         switch (name) {
             case `username`:
@@ -58,7 +73,13 @@ export const LoginStep = ({ stepChange }) => {
                 break;
             default: break;
         }
-        setInputValidator({...inputValidator, [name]: isValid})
+        if (!isValid) errorMessage = `Incorrect value`
+        setInputValidator({
+            ...inputValidator, 
+            [name]: {
+                isValid: isValid,
+                errorMessage: errorMessage
+            }})
         setLoginData({
             ...loginData,
             [name]: value
@@ -76,6 +97,8 @@ export const LoginStep = ({ stepChange }) => {
                     msg: `Hi ${userResponse.personName}`,
                     isError: false
                 })
+                setInputValidator(initialInputValidationState)
+
                 history.push(`/map`)
                 
             } catch ({ message }) {
@@ -104,8 +127,9 @@ export const LoginStep = ({ stepChange }) => {
                             margin="dense"
                             label="Username"
                             error={
-                                inputValidator.username == null ? false : !inputValidator.username
+                                inputValidator.username.isValid == null ? false : !inputValidator.username.isValid
                             }
+                            helperText={inputValidator.username.errorMessage}
                             type="text"
                             name="username"
                             fullWidth
@@ -123,8 +147,9 @@ export const LoginStep = ({ stepChange }) => {
                             margin="dense"
                             label="Password"
                             error={
-                                inputValidator.password == null ? false : !inputValidator.password
+                                inputValidator.password.isValid == null ? false : !inputValidator.password.isValid
                             }
+                            helperText={inputValidator.password.errorMessage}
                             type="password"
                             name="password"
                             fullWidth

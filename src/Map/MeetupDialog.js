@@ -25,25 +25,38 @@ import { postNewMeetup } from '../Services/Meetups'
 /* Validation */
 import { isNameValid } from "../Validation/newMeetupValidation"
 
+const initialInputValidationState = {
+    name: {
+        isValid: null,
+        errorMessage: null
+    },
+    maxAttendants: {
+        isValid: null,
+        errorMessage: null
+    },
+}
+
 
 export const MeetupDialog = () => {
+    /* Redux states */
     let selectedMeetup = useSelector(({ selectedMeetup }) => selectedMeetup)
     let isDialogOpen = useSelector(({ isDialogOpen }) => isDialogOpen)
 
-    const [inputValidator, setInputValidator] = useState({
-        name: null,
-        maxAttendants: null,
-    })
-    
+    /* Local states */
+    const [inputValidator, setInputValidator] = useState(initialInputValidationState)
+
     const isFormValid = () => {
         return Object.keys(inputValidator).every((key) => {
-            if (inputValidator[key] !== true) {
+            if (!Boolean(inputValidator[key].isValid)) {
                 setInputValidator({
                     ...inputValidator,
-                    [key]: false
+                    [key]: {
+                        isValid: false,
+                        errorMessage: `Empty field`
+                    }
                 })
             }
-            return inputValidator[key] === true
+            return inputValidator[key].isValid === true
         })
     }
 
@@ -51,17 +64,24 @@ export const MeetupDialog = () => {
     const handleInputChange = (e) => {
         let { name, value } = e.target
         let isValid = true
+        let errorMessage = null
 
         switch (name) {
             case `name`: 
                 isValid = isNameValid(value)
                 break; 
-            case `maxAttendats`:
+            case `maxAttendants`:
                 isValid = Boolean(value)
                 break; 
             default: break;
         }
-        setInputValidator({...inputValidator, [name]: isValid})
+        if (!isValid) errorMessage = `Incorrect value`
+        setInputValidator({
+            ...inputValidator, 
+            [name]: {
+                isValid: isValid,
+                errorMessage: errorMessage
+            }})
         setSelectedMeetup({
             ...selectedMeetup,
             [name]: value
@@ -70,6 +90,7 @@ export const MeetupDialog = () => {
 
     const handleClose = () => {
         setSelectedMeetup(initialMeetupState)
+        setInputValidator(initialInputValidationState)
         setIsDialogOpen(false)
     }
 
@@ -93,8 +114,9 @@ export const MeetupDialog = () => {
                     margin="dense"
                     label="Name"
                     error={
-                        inputValidator.name == null ? false :!inputValidator.name
+                        inputValidator.name.isValid == null ? false :!inputValidator.name.isValid
                     }
+                    helperText={inputValidator.name.errorMessage}
                     type="text"
                     name="name"
                     fullWidth
@@ -104,8 +126,9 @@ export const MeetupDialog = () => {
                     margin="dense"
                     label="Max attendants"
                     error={
-                        inputValidator.maxAttendats == null ? false :!inputValidator.maxAttendats
+                        inputValidator.maxAttendants.isValid == null ? false :!inputValidator.maxAttendants.isValid
                     }
+                    helperText={inputValidator.maxAttendants.errorMessage}
                     type="number"
                     name="maxAttendants"
                     fullWidth
@@ -114,9 +137,6 @@ export const MeetupDialog = () => {
                 <TextField
                     margin="dense"
                     label="Category"
-                    error={
-                        inputValidator.meetupCategory == null ? false :!inputValidator.meetupCategory
-                    }
                     select
                     name="category"
                     fullWidth
@@ -138,6 +158,7 @@ export const MeetupDialog = () => {
                     fullWidth
                     onChange={handleInputChange}
                     value={selectedMeetup?.date}
+                    readOnly
                 />
                 <TextField 
                     margin="dense"
