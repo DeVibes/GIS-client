@@ -1,8 +1,8 @@
 /* Libraries */
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { InfoWindow } from '@react-google-maps/api'
-import { Avatar, Card, CardContent, CardHeader, CardMedia, Typography, CardActions, Button } from '@material-ui/core';
+import { Avatar, Card, CardContent, CardHeader, CardMedia, Typography, CardActions, Button, Grow, TextField, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
 
@@ -17,9 +17,12 @@ import { setSnack } from '../StateManagement/actions/snackPopup'
 
 /* Services */
 import { editMeetup } from '../Services/Meetups'
+import { updateUser } from '../Services/Users'
 
+/* Validation */
+import { isNameValid } from "../Validation/newMeetupValidation"
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) =>({
     container: {
         maxWidth: 300,
         padding: 0
@@ -49,16 +52,31 @@ const useStyles = makeStyles({
         display: `flex`,
         justifyContent: `flex-end`
     },
-})
+    addressWrapper: {
+        display: `flex`,
+    }
+}))
 
 export const MeetupPopup = () => {
     /* Redux states */
     let clickedMeetup = useSelector(({ selectedMeetup }) => selectedMeetup)
-    let currentUser = useSelector(({ userData }) => userData.username)
+    let userData = useSelector(({ userData }) => userData)
     let isOpen = useSelector(({ isPopupOpen }) => isPopupOpen)
+
+    /* Local states */
+    const [addressNickName, setAddressNickName] = useState({
+        isVisible: false,
+        nicknameValue: null
+    })
+
+    const handleShowSaveAddress = () => setAddressNickName({
+        ...addressNickName,
+        isVisible: true
+    })
 
     const classes = useStyles()
 
+    /* Handlers */
     const handleClosePopup = () => {
         setIsPopupOpen(false)
         setSelectedMeetup(initialMeetupState)
@@ -68,11 +86,11 @@ export const MeetupPopup = () => {
         let meetupAttendants = clickedMeetup.attendants
         let msg
         if (isAttending) {
-            meetupAttendants.push(currentUser)
+            meetupAttendants.push(userData.username)
             msg = `Registered for this meetup`
         }
         else {
-            meetupAttendants = meetupAttendants.filter(attendant => attendant !== currentUser)
+            meetupAttendants = meetupAttendants.filter(attendant => attendant !== userData.username)
             msg = `Unregistered for this meetup`
         }
         const updatedMeetup = await editMeetup(clickedMeetup._id, { 
@@ -86,6 +104,12 @@ export const MeetupPopup = () => {
             isError: false
         })
     }
+
+    const isAddressAlreadySaved = () => !userData.savedAddresses.some(addressObject => addressObject.address === clickedMeetup.address)
+
+    const isUserAlreadySignedToMeetup = () => clickedMeetup.attendants.includes(userData.username)
+
+    const isAdminOfMeetup = () => userData.username === clickedMeetup.admin
 
     return (
         <>
@@ -122,28 +146,130 @@ export const MeetupPopup = () => {
                             <Typography paragraph>
                                 Some meetup data
                             </Typography>
-                            {clickedMeetup.attendants.includes(currentUser) &&
+                            {isUserAlreadySignedToMeetup() &&
                                 <Typography variant="h4">
                                     Ur in!
                                 </Typography>
                             }
+                            <SaveAddressField 
+                                userData={userData}
+                                currentAddress={clickedMeetup.address}
+                                addressNickName={addressNickName}
+                                setAddressNickName={setAddressNickName}
+                            /> 
                         </CardContent>
                         <CardActions className={classes.actions} >
-                            {currentUser === clickedMeetup.admin &&
+                            {isAdminOfMeetup() &&
                                 <Button>Manage</Button>
                             }
-                            {!clickedMeetup.attendants.includes(currentUser) ?
-                                <Button onClick={() => handleAttendance(true)}>
-                                    Sign me up
-                                </Button>
-                                :
+                            {isUserAlreadySignedToMeetup() ?
                                 <Button onClick={() => handleAttendance(false)}>
                                     Cancel attendance
                                 </Button>
+                                :
+                                <Button onClick={() => handleAttendance(true)}>
+                                    Sign me up
+                                </Button>
                             }
-                        </CardActions>              
+                            <Button 
+                                onClick={() => handleShowSaveAddress()}
+                                disabled={!isAddressAlreadySaved()}
+                            >
+                                Save thiss address
+                            </Button>
+                        </CardActions>         
                     </Card>
                 </InfoWindow>
+            )}
+        </>
+    )
+}
+
+const SaveAddressField = ({ userData, currentAddress, addressNickName, setAddressNickName }) => {
+    const classes = useStyles()
+
+    const initialInputValidationState = {
+        addressNickName: {
+            isValid: null,
+            errorMessage: null
+        },
+    }
+
+    /* Local states */
+    const [inputValidator, setInputValidator] = useState(initialInputValidationState)
+
+    const handleNickNameChange = (e) => {
+        let { value } = e.target
+        let isValid = isNameValid(value)
+        let errorMessage = null
+        if (!isValid) 
+            errorMessage = `Incorrect value`
+        setInputValidator({
+            ...inputValidator, 
+            addressNickName: {
+                isValid: isValid,
+                errorMessage: errorMessage
+            }})
+        setAddressNickName({
+            ...addressNickName,
+            nicknameValue: value
+        })
+    }
+
+    const isInputValid = () => {
+        if (!Boolean(inputValidator.addressNickName.isValid)) {
+            setInputValidator({
+                ...inputValidator,
+                addressNickName: {
+                    isValid: false,
+                    errorMessage: `Empty field`
+                }
+            })
+            return false
+        }
+        return true
+    }
+
+    const handleSaveAddress = async () => {
+        if (isInputValid()) {
+            const response = await updateUser({
+                id: userData.id,
+                savedAddresses: [...userData.savedAddresses, {
+                    nickName: addressNickName.nicknameValue,
+                    address: currentAddress
+                }]
+            })
+            setSnack({
+                isSnackOpen: true,
+                msg: `saved`,
+                isError: false
+            })
+            setAddressNickName({
+                isVisible: false,
+                nicknameValue: null
+            })
+        }
+    }
+    return (
+        <>
+            {addressNickName.isVisible && (
+                <Grow in={addressNickName.isVisible} timeout={700}>
+                    <div className={classes.addressWrapper}>
+                        <TextField
+                            margin="dense"
+                             label="Address nickname"
+                            error={
+                                inputValidator.addressNickName.isValid == null ? false : !inputValidator.addressNickName.isValid
+                            }
+                            helperText={inputValidator.addressNickName.errorMessage}
+                            type="text"
+                            name="addressNickName"
+                            fullWidth
+                            onChange={handleNickNameChange}
+                        />
+                        <Button onClick={() => handleSaveAddress()}>Save it</Button>
+                    </div>
+                </Grow>
             )}
         </>
     )

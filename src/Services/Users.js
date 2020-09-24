@@ -54,7 +54,7 @@ export const getUserDataByUsername = async (username) => {
                 lat: 31.963358630236876,
                 lng: 34.80391502380371
             },
-            savedAddresses: responseData.savedAddress || []
+            savedAddresses: responseData.savedAddresses || []
         })
     } 
 }

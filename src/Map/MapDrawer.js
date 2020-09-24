@@ -1,6 +1,6 @@
 /* Libraries */
-import React from 'react'
-import { Divider, List, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core'
+import React, { useState } from 'react'
+import { Button, Collapse, Divider, List, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 
@@ -9,6 +9,8 @@ const styles = makeStyles((theme) => ({
 }))
 
 export const MapDrawer = () => {
+    const [edit, setEdit] = useState(false)
+
     return (
         <>
             <Typography variant="h5" align="center">
@@ -16,7 +18,7 @@ export const MapDrawer = () => {
             </Typography>
             <Divider/>
             <List>
-                <ListItem>
+                <ListItem button on>
                     <ListItemIcon>
                         <VisibilityIcon/>
                     </ListItemIcon>
@@ -25,8 +27,15 @@ export const MapDrawer = () => {
                     </ListItemText>
                 </ListItem>
             </List>
+            <Button onClick={() => setEdit(!edit)}>click</Button>
             <Divider/>
-            App settings
+            {edit && (
+                <Collapse in={edit}>
+                    <Typography variant="h6">
+                        test
+                    </Typography>
+                </Collapse>
+            )}
         </>
     )
 }
