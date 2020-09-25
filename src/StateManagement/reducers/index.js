@@ -3,6 +3,7 @@ import { combineReducers } from "redux"
 import { dialogReducer } from "./dialogReducer"
 import { loginDataReducer } from "./loginDataReducer"
 import { meetupsReducer } from "./meetupsReducer"
+import { meetupsFiltersReducer } from "./meetupsFiltersReducer"
 import { popupReducer } from "./popupReducer"
 import { profileReducer } from "./profileOpenReducer"
 import { searchQueryReducer } from "./searchQueryReducer"
@@ -19,6 +20,7 @@ export default combineReducers({
     isProfileOpen: profileReducer,
     isPopupOpen: popupReducer,
     snackPopup: snackReducer,
-    searchQuery: searchQueryReducer
+    searchQuery: searchQueryReducer,
+    meetupsFilters: meetupsFiltersReducer
 })
 

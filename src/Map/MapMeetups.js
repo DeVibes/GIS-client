@@ -13,9 +13,10 @@ import { getAllMeetups } from '../Services/Meetups'
 export const MapMeetups = () => {
     /* Redux states */
     let meetups = useSelector(({ meetups }) => meetups)
+    let meetupsFilters = useSelector(({ meetupsFilters }) => meetupsFilters)
 
     useEffect(() => {
-        getAllMeetups()
+        getAllMeetups(meetupsFilters)
     }, [])
 
     const onMeetupClick = (id) => {
