@@ -1,48 +1,65 @@
 /* Libraries */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { useHistory } from "react-router-dom";
 import { Card, 
-    TextField, 
     CardContent, 
     Typography, 
     CardActions, 
-    Button,
+    Button, 
+    TextField, 
     Grid } 
 from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import PhoneIcon from '@material-ui/icons/Phone';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 /* Redux */
-import { setLoginData } from '../StateManagement/actions/loginData'
-import { setSnack } from '../StateManagement/actions/snackPopup'
-import { setUserData } from '../StateManagement/actions/userData'
+import { setPassword, setLoginData } from '../../StateManagement/actions/loginData'
+import { setSnack } from '../../StateManagement/actions/snackPopup'
 
 /* Services */
-import { authUser } from '../Services/Users'
+import { createNewUser } from '../../Services/Users'
 
 /* Validation */
-import { isUsernameValid, isPasswordValid } from '../Validation/userValidation';
+import { isUsernameValid,
+    isPasswordValid,
+    isNameValid,
+    isPhoneValid 
+} from '../../Validation/userValidation';
 
-export const LoginStep = ({ stepChange }) => {
+const fields = {
+    username: `username`,
+    password: `password`,
+    personName: `personName`,
+    phone: `phone`,
+}
+
+const initialInputValidationState = {
+    username: {
+        isValid: null,
+        message: null
+    },
+    password: {
+        isValid: null,
+        message: null
+    },
+    personName: {
+        isValid: null,
+        message: null
+    },
+    phone: {
+        isValid: null,
+        message: null
+    }
+}
+
+export const RegisterStep = ({ stepChange }) => {
     /* Redux states */
     let loginData = useSelector(({ loginData }) => loginData)
-    
-    const initialInputValidationState = {
-        username: {
-            isValid: Boolean(loginData?.username) ? true : null,
-            errorMessage: null
-        }, 
-        password: {
-            isValid: null,
-            errorMessage: null
-        },
-    }
 
     /* Local states */
     const [inputValidator, setInputValidator] = useState(initialInputValidationState)
-
-    let history = useHistory()
 
     const isFormValid = () => {
         return Object.keys(inputValidator).every((key) => {
@@ -65,13 +82,19 @@ export const LoginStep = ({ stepChange }) => {
         let errorMessage = null
 
         switch (name) {
-            case `username`:
+            case fields.username:
                 isValid = isUsernameValid(value)
                 break;
-            case `password`:
+            case fields.password:
                 isValid = isPasswordValid(value)
                 break;
-            default: break;
+            case fields.personName:
+                isValid = isNameValid(value)
+                break;
+            case fields.phone:
+                isValid = isPhoneValid(value)
+                break;
+            default: break; 
         }
         if (!isValid) errorMessage = `Incorrect value`
         setInputValidator({
@@ -86,21 +109,18 @@ export const LoginStep = ({ stepChange }) => {
         })
     }
 
-    const handleSubmit = async () => {  
+    const handleSubmit = async() => {
         if (isFormValid()) {
             try {
-                const userResponse = await authUser(loginData.username, loginData.password)
-                localStorage.setItem(`loginUser`, userResponse.username)
-                setLoginData(null)
+                const createdUser = await createNewUser(loginData)
                 setSnack({
                     isSnackOpen: true,
-                    msg: `Hi ${userResponse.personName}`,
+                    msg: createdUser.message,
                     isError: false
                 })
+                setPassword("")
                 setInputValidator(initialInputValidationState)
-
-                history.push(`/map`)
-                
+                stepChange(1)
             } catch ({ message }) {
                 console.log(message)
                 setSnack({
@@ -109,14 +129,14 @@ export const LoginStep = ({ stepChange }) => {
                     isError: true
                 })
             }
-        } 
+        }
     }
 
     return (
         <Card>
             <CardContent>
                 <Typography variant="h4">
-                    Login
+                    Register
                 </Typography>
                 <Grid container spacing={1} alignItems="flex-end">
                     <Grid item>
@@ -131,10 +151,9 @@ export const LoginStep = ({ stepChange }) => {
                             }
                             helperText={inputValidator.username.errorMessage}
                             type="text"
-                            name="username"
+                            name={fields.username}
                             fullWidth
                             onChange={handleInputChange}
-                            value={loginData?.username}
                         />
                     </Grid>
                 </Grid>
@@ -151,9 +170,47 @@ export const LoginStep = ({ stepChange }) => {
                             }
                             helperText={inputValidator.password.errorMessage}
                             type="password"
-                            name="password"
+                            name={fields.password}
                             fullWidth
                             onChange={handleInputChange}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={1} alignItems="flex-end">
+                    <Grid item>
+                        <AssignmentIndIcon/>
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            margin="dense"
+                            label="Name"
+                            error={
+                                inputValidator.personName.isValid == null ? false : !inputValidator.personName.isValid
+                            }
+                            helperText={inputValidator.personName.errorMessage}
+                            type="text"
+                            name={fields.personName}
+                            fullWidth
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={1} alignItems="flex-end">
+                    <Grid item>
+                        <PhoneIcon/>
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            margin="dense"
+                            label="Phone"
+                            error={
+                                inputValidator.phone.isValid == null ? false : !inputValidator.phone.isValid
+                            }
+                            helperText={inputValidator.phone.errorMessage}
+                            type="text"
+                            name={fields.phone}
+                            fullWidth
+                            onChange={handleInputChange}                    
                         />
                     </Grid>
                 </Grid>

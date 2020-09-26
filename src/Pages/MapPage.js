@@ -4,10 +4,10 @@ import { useSelector } from 'react-redux'
 import { LoadScript, GoogleMap }from '@react-google-maps/api'
 
 /* Components */
-import { MapHeader } from '../Map/MapHeader'
-import { MapLayer } from '../Map/MapLayer'
+import { MapHeader } from '../Components/Map/MapHeader'
+import { MapLayer } from '../Components/Map/MapLayer'
 import { MeetupCategories } from '../Data/MeetupCategories'
-import { SnackbarPopup } from '../Global/SnackbarPopup';
+import { SnackbarPopup } from '../Components/Global/SnackbarPopup';
 
 /* Redux */
 import { setSelectedMeetup } from '../StateManagement/actions/selectedMeetup'

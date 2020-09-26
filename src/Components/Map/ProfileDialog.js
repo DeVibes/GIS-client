@@ -17,16 +17,16 @@ from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 
 /* Redux */
-import { setIsProfileOpen } from '../StateManagement/actions/isProfileOpen'
-import { setUserData } from '../StateManagement/actions/userData'
-import { setSnack } from '../StateManagement/actions/snackPopup'
+import { setIsProfileOpen } from '../../StateManagement/actions/isProfileOpen'
+import { setUserData } from '../../StateManagement/actions/userData'
+import { setSnack } from '../../StateManagement/actions/snackPopup'
 
 /* Services */
-import { updateUser } from '../Services/Users'
+import { updateUser } from '../../Services/Users'
 
 /* Validation */
-import { isNameValid } from "../Validation/userValidation"
-import { isPhoneValid } from "../Validation/userValidation"
+import { isNameValid } from "../../Validation/userValidation"
+import { isPhoneValid } from "../../Validation/userValidation"
 
 const styles = makeStyles((theme) => ({
     addressesContainer: {

@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux'
 import { Marker } from '@react-google-maps/api'
 
 /* Components */
-import { MeetupCategories } from '../Data/MeetupCategories'
+import { MeetupCategories } from '../../Data/MeetupCategories'
 
 /* Redux */
-import { setSelectedMeetup } from '../StateManagement/actions/selectedMeetup'
-import { setIsDialogOpen } from '../StateManagement/actions/isDialogOpen'
+import { setSelectedMeetup } from '../../StateManagement/actions/selectedMeetup'
+import { setIsDialogOpen } from '../../StateManagement/actions/isDialogOpen'
 
 export const MeetupSearchPins = () => {
     /* Redux states */

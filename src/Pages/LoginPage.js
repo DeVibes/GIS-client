@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 
 /* Components */
-import { LoginForm } from '../Login/LoginForm'
-import { BackgroundLoop } from '../Login/BackgroundLoop'
-import { SnackbarPopup } from '../Global/SnackbarPopup';
+import { LoginForm } from '../Components/Login/LoginForm'
+import { BackgroundLoop } from '../Components/Login/BackgroundLoop'
+import { SnackbarPopup } from '../Components/Global/SnackbarPopup';
 
 /* Functions */
 import { setSnackState } from '../StateManagement/actions/snackPopup'

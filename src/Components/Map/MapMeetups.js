@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux'
 import { Marker } from '@react-google-maps/api'
 
 /* Redux */
-import { setSelectedMeetup } from '../StateManagement/actions/selectedMeetup'
-import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
+import { setSelectedMeetup } from '../../StateManagement/actions/selectedMeetup'
+import { setIsPopupOpen } from '../../StateManagement/actions/isPopupOpen'
 
 /* Services */
-import { getAllMeetups } from '../Services/Meetups'
+import { getAllMeetups } from '../../Services/Meetups'
 
 export const MapMeetups = () => {
     /* Redux states */

@@ -11,19 +11,19 @@ import { Dialog,
 } from '@material-ui/core';
 
 /* Components */
-import { MeetupCategories } from '../Data/MeetupCategories'
-import { initialMeetupState } from '../StateManagement/reducers/selectedMeetupReducer'
+import { MeetupCategories } from '../../Data/MeetupCategories'
+import { initialMeetupState } from '../../StateManagement/reducers/selectedMeetupReducer'
 
 /* Redux */
-import { setSelectedMeetup } from '../StateManagement/actions/selectedMeetup'
-import { setIsDialogOpen } from "../StateManagement/actions/isDialogOpen";
-import { resetSearchQuery } from "../StateManagement/actions/searchQuery";
+import { setSelectedMeetup } from '../../StateManagement/actions/selectedMeetup'
+import { setIsDialogOpen } from "../../StateManagement/actions/isDialogOpen";
+import { resetSearchQuery } from "../../StateManagement/actions/searchQuery";
 
 /* Services */
-import { postNewMeetup } from '../Services/Meetups'
+import { postNewMeetup } from '../../Services/Meetups'
 
 /* Validation */
-import { isNameValid } from "../Validation/newMeetupValidation"
+import { isNameValid } from "../../Validation/newMeetupValidation"
 
 const initialInputValidationState = {
     name: {

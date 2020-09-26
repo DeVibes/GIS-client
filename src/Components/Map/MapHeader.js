@@ -9,7 +9,7 @@ import { AppBar,
     Drawer, 
     InputBase,
     Menu,
-    MenuItem, Divider 
+    MenuItem 
 } from '@material-ui/core/';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -17,18 +17,18 @@ import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 /* Components */
-import { MapDrawer } from './MapDrawer'
+import { MapDrawer } from '../Drawer/MapDrawer'
 
 /* Redux */
-import { updateSearchString } from '../StateManagement/actions/searchQuery'
-import { updateSearchResults } from '../StateManagement/actions/searchQuery'
-import { setSnack } from '../StateManagement/actions/snackPopup'
-import { setIsProfileOpen } from '../StateManagement/actions/isProfileOpen'
+import { updateSearchString } from '../../StateManagement/actions/searchQuery'
+import { updateSearchResults } from '../../StateManagement/actions/searchQuery'
+import { setSnack } from '../../StateManagement/actions/snackPopup'
+import { setIsProfileOpen } from '../../StateManagement/actions/isProfileOpen'
 
 /* Services */
-import { getAddressByString } from '../Services/GoogleAPI'
+import { getAddressByString } from '../../Services/GoogleAPI'
 
-const drawerWidth = 240
+const drawerWidth = 300
 
 const styles = makeStyles((theme) => ({
     drawer: {
@@ -216,25 +216,6 @@ export const MapHeader = ({ recenterMap }) => {
                             <SearchIcon/>
                         </IconButton>
                     </div>
-                    {/* <div className={classes.searchContainter}>
-                        <InputBase
-                            placeholder="Search address"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.newInput
-                            }}
-                        >
-                        </InputBase>
-                        <Divider className={classes.divider} orientation="vertical"/>
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            edge="end"
-                            onClick={handleSearchClick}
-                        >
-                            <SearchIcon/>
-                        </IconButton>
-                    </div> */}
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"

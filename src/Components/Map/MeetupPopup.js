@@ -7,20 +7,20 @@ import { makeStyles } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
 
 /* Components */
-import { initialMeetupState } from '../StateManagement/reducers/selectedMeetupReducer'
+import { initialMeetupState } from '../../StateManagement/reducers/selectedMeetupReducer'
 
 /* Redux */
-import { setSelectedMeetup } from "../StateManagement/actions/selectedMeetup";
-import { updateMeetup } from "../StateManagement/actions/meetups"
-import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
-import { setSnack } from '../StateManagement/actions/snackPopup'
+import { setSelectedMeetup } from "../../StateManagement/actions/selectedMeetup";
+import { updateMeetup } from "../../StateManagement/actions/meetups"
+import { setIsPopupOpen } from '../../StateManagement/actions/isPopupOpen'
+import { setSnack } from '../../StateManagement/actions/snackPopup'
 
 /* Services */
-import { editMeetup } from '../Services/Meetups'
-import { updateUser } from '../Services/Users'
+import { editMeetup } from '../../Services/Meetups'
+import { updateUser } from '../../Services/Users'
 
 /* Validation */
-import { isNameValid } from "../Validation/newMeetupValidation"
+import { isNameValid } from "../../Validation/newMeetupValidation"
 
 const useStyles = makeStyles((theme) =>({
     container: {
@@ -257,7 +257,7 @@ const SaveAddressField = ({ userData, currentAddress, addressNickName, setAddres
                     <div className={classes.addressWrapper}>
                         <TextField
                             margin="dense"
-                             label="Address nickname"
+                            label="Address nickname"
                             error={
                                 inputValidator.addressNickName.isValid == null ? false : !inputValidator.addressNickName.isValid
                             }

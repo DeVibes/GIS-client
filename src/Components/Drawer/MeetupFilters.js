@@ -11,43 +11,24 @@ import { Button,
     Typography,  
     ListSubheader, 
     ListItemSecondaryAction,
-    Checkbox 
+    Checkbox,
+    Grow,
+    TextField,
+    MenuItem 
 } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import EventAvailableIcon from '@material-ui/icons/EventAvailable';
-import LabelIcon from '@material-ui/icons/Label';
 
 /* Components */
-import { MeetupCategories } from '../Data/MeetupCategories'
+import { MeetupCategories } from '../../Data/MeetupCategories'
 
 /* Redux */
-import { setAttendanceFilter, setCategoriesFilter } from '../StateManagement/actions/meetupFilterOptions'
+import { setAttendanceFilter, setCategoriesFilter } from '../../StateManagement/actions/meetupFilterOptions'
 
 /* Services */
-import { getAllMeetups } from '../Services/Meetups'
+import { getAllMeetups } from '../../Services/Meetups'
 
-const styles = makeStyles((theme) => ({
-
-}))
-
-export const MapDrawer = () => {
-    return (
-        <>
-            <Typography variant="h5" align="center">
-                App name
-            </Typography>
-            <Divider/>
-            <FilterArea/>
-            <Divider/>
-        </>
-    )
-}
-
-const FilterArea = () => {
+export const MeetupFilter = () => {
     /* Redux states */
     let meetupsFilters = useSelector(({ meetupsFilters }) => meetupsFilters)
     let userData = useSelector(({ userData }) => userData)

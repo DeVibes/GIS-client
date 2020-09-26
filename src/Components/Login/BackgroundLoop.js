@@ -3,7 +3,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 
 /* Components */
-import backgroundLoop from '../Assets/loop.mp4'
+import backgroundLoop from '../../Assets/loop.mp4';
 
 const styles = makeStyles({
     loginWrapper: {
