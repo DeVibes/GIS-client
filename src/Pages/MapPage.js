@@ -1,5 +1,5 @@
 /* Libraries */
-import React, { useEffect, useRef, useCallback, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { LoadScript, GoogleMap }from '@react-google-maps/api'
 
@@ -14,6 +14,7 @@ import { setSelectedMeetup } from '../StateManagement/actions/selectedMeetup'
 import { setIsDialogOpen } from '../StateManagement/actions/isDialogOpen'
 import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
 import { setSnackState } from '../StateManagement/actions/snackPopup'
+import { setUserData } from '../StateManagement/actions/userData'
 
 /* Services */
 import { getAddressByCoords } from '../Services/GoogleAPI'
@@ -31,8 +32,23 @@ export const MapPage = () => {
 
     useEffect(() => {
         //TODO Get current location from browser
+
+        async function fetchUser(loggedUser) {
+            const user = await getUserDataByUsername(loggedUser)
+            setUserData({
+                id: user._id,
+                username: user.username,
+                personName: user.personName,
+                phone: user.phone,
+                coords: {
+                    lat: 31.963358630236876,
+                    lng: 34.80391502380371
+                },
+                savedAddresses: user.savedAddresses || []
+            })
+        } 
         let loggedUser = localStorage.getItem("loginUser")
-        getUserDataByUsername(loggedUser)
+        fetchUser(loggedUser)
     }, [])
 
     const mapRef = useRef()

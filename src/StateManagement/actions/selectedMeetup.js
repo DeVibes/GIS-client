@@ -81,3 +81,11 @@ export const setSelectedMeetup = meetup => {
         payload: meetup,
     })
 }
+
+export const resetSelecedMeetup = () => {
+    console.log(`Redux ~ reseting selected meetup details`)
+    store.dispatch({
+        type: `RESET_MEETUP`,
+        payload: null,
+    })
+}

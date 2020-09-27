@@ -1,5 +1,3 @@
-import { addMeetup, setMeetups, updateMeetup } from '../StateManagement/actions/meetups'
-
 export const postNewMeetup = async (meetup) => {
     const response = await fetch(`${process.env.REACT_APP_SERVER}/meetups`, {
         mode: 'cors',
@@ -7,15 +5,10 @@ export const postNewMeetup = async (meetup) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(meetup)
     })
-
     if (response.status === 500)
-        return false
-    else {
-        const meetupSaved = await response.json()
-        console.log(meetupSaved)
-        addMeetup(meetupSaved)
-        return true
-    }
+        throw new Error(response.message)
+    else 
+        return await response.json()
 }
 
 export const getAllMeetups = async (filterOptions) => {
@@ -28,7 +21,7 @@ export const getAllMeetups = async (filterOptions) => {
     const responseData = await response.json()
     if (response.status === 500)
         throw new Error(responseData)
-    setMeetups(responseData)        
+    return responseData
 }
 
 export const editMeetup = async (meetupId, updatedMeetup) => {
@@ -40,12 +33,10 @@ export const editMeetup = async (meetupId, updatedMeetup) => {
     })
 
     if (response.status !== 200)
-        console.log(`Error in updating meetup`)
+        throw new Error(`Error in updating meetup`)
     else {
         const updatedMeetup = await response.json()
-        // setMeetups(...)
         return updatedMeetup
-        // updateMeetup(updatedMeetup)
     }
 }
 

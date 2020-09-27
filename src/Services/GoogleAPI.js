@@ -8,7 +8,7 @@ export const getAddressByCoords = async (lat, lng) => {
     }
 }
 
-export const getAddressByString = async(searchString) => {
+export const getAddressByString = async (searchString) => {
     const response = await fetch(`${process.env.REACT_APP_SERVER}/search?searchQuery=${searchString}`)
     if (response.status === 404) 
         throw new Error(response.message)

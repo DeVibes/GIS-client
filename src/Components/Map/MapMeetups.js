@@ -6,6 +6,7 @@ import { Marker } from '@react-google-maps/api'
 /* Redux */
 import { setSelectedMeetup } from '../../StateManagement/actions/selectedMeetup'
 import { setIsPopupOpen } from '../../StateManagement/actions/isPopupOpen'
+import { setMeetups } from '../../StateManagement/actions/meetups'
 
 /* Services */
 import { getAllMeetups } from '../../Services/Meetups'
@@ -16,13 +17,19 @@ export const MapMeetups = () => {
     let meetupsFilters = useSelector(({ meetupsFilters }) => meetupsFilters)
 
     useEffect(() => {
-        getAllMeetups(meetupsFilters)
+        async function fetchData() {
+            try {
+                const meetups = await getAllMeetups(meetupsFilters)
+                setMeetups(meetups)
+            } catch (error) {
+                
+            }
+        }
+        fetchData()
     }, [])
 
     const onMeetupClick = (id) => {
         let selectedMeetup = meetups.find(m => m._id === id)
-        console.log(`Clicked on meetup!`)
-        console.log(selectedMeetup)
         setSelectedMeetup(selectedMeetup)
         setIsPopupOpen(true)
     }

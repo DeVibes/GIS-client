@@ -95,16 +95,25 @@ export const MeetupPopup = () => {
             meetupParticipants = meetupParticipants.filter(participant => participant !== userData.username)
             msg = `Unregistered for this meetup`
         }
-        const updatedMeetup = await editMeetup(clickedMeetup._id, { 
-            meetupParticipants: meetupParticipants 
-        })
-        updateMeetup(updatedMeetup)
-        setSelectedMeetup(updatedMeetup)
-        setSnack({
-            isSnackOpen: true,
-            msg: msg,
-            isError: false
-        })
+        try {
+            const updatedMeetup = await editMeetup(clickedMeetup._id, { 
+                meetupParticipants: meetupParticipants 
+            })
+            updateMeetup(updatedMeetup)
+            setSelectedMeetup(updatedMeetup)
+            setSnack({
+                isSnackOpen: true,
+                msg: msg,
+                isError: false
+            })
+        } catch ({ message }) {
+            setSnack({
+                isSnackOpen: true,
+                msg: message,
+                isError: true
+            })
+        }
+
     }
 
     const handleManageClick = () => setIsManage(!isManageOpen)

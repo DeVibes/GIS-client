@@ -1,8 +1,7 @@
 import store from '../store'
 
 export const setSnackState = isOpen => {
-    console.log(`UPDATED IS SNACK OPEN STATE!`)
-    console.log(isOpen)
+    console.log(`Redux ~ setting snack is open - ${isOpen}`)
     store.dispatch({
         type: `SET_IS_SNACK_OPEN`,
         payload: isOpen
@@ -28,7 +27,7 @@ export const setSnackIsError = isError => {
 }
 
 export const setSnack = data => {
-    console.log(`UPDATED SNACK STATE!`)
+    console.log(`Redux ~ setting snack`)
     console.log(data)
     store.dispatch({
         type: `SET_SNACK`,

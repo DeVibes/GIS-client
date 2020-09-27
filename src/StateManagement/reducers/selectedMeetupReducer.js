@@ -66,6 +66,8 @@ export const selectedMeetupReducer = (state = initialMeetupState, action) => {
             }
         case `SET_MEETUP`:
             return action.payload;
+        case `RESET_MEETUP`:
+            return initialMeetupState;
         default:
             return state;
     }

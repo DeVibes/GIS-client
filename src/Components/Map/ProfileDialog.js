@@ -81,18 +81,26 @@ export const ProfileDialog = () => {
         setInputValidator(initialInputValidationState)
     }
 
-    const handleAddMeetup = () => {
-        //TODO add meetup on saved location
-        console.log(`object`)
-    }
+    // const handleAddMeetup = () => {
+    //     //TODO add meetup on saved location
+    //     console.log(`object`)
+    // }
 
     const handleSave = async () => {
         if (isFormValid()) {
-            if (await updateUser(userData)) {
+            try {
+                const updatedUser = await updateUser(userData);
+                setUserData(updatedUser)
                 setSnack({
                     isSnackOpen: true,
                     msg: `Done`,
                     isError: false
+                })
+            } catch ({ message }) {
+                setSnack({
+                    isSnackOpen: true,
+                    msg: message,
+                    isError: true
                 })
             }
         }
@@ -174,12 +182,6 @@ export const ProfileDialog = () => {
                     }
                     helperText={inputValidator.phone.errorMessage}
                 />
-                {userData.savedAddresses.length > 0 && (
-                    <>
-                        <Typography variant="h6">Saved addresses</Typography>
-                        <Address address={userData.savedAddress} classes={classes} handleAddMeetup={handleAddMeetup}/>
-                    </>
-                )}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Back</Button>
@@ -189,36 +191,36 @@ export const ProfileDialog = () => {
     )
 }
 
-const Address = ({ address, classes, handleAddMeetup }) => (
-        <div className={classes.addressesContainer}>
-            {address.map((address, index) => (
-                <Grid container justify="flex-start" key={index}>
-                    <Grid item>
-                        <TextField 
-                            variant="outlined"
-                            margin="normal"
-                            label="Name"
-                            type="text"
-                            name="name"
-                            value={address.name}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TextField 
-                            variant="outlined"
-                            margin="normal"
-                            label="Address"
-                            type="text"
-                            name="address"
-                            value={address.fullAddress}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <Button onClick={() => handleAddMeetup()}>
-                            Add event
-                        </Button>
-                    </Grid>
-                </Grid>
-            ))}
-        </div>
-)
+// const Address = ({ address, classes, handleAddMeetup }) => (
+//         <div className={classes.addressesContainer}>
+//             {address.map((address, index) => (
+//                 <Grid container justify="flex-start" key={index}>
+//                     <Grid item>
+//                         <TextField 
+//                             variant="outlined"
+//                             margin="normal"
+//                             label="Name"
+//                             type="text"
+//                             name="name"
+//                             value={address.name}
+//                         />
+//                     </Grid>
+//                     <Grid item>
+//                         <TextField 
+//                             variant="outlined"
+//                             margin="normal"
+//                             label="Address"
+//                             type="text"
+//                             name="address"
+//                             value={address.fullAddress}
+//                         />
+//                     </Grid>
+//                     <Grid item>
+//                         <Button onClick={() => handleAddMeetup()}>
+//                             Add event
+//                         </Button>
+//                     </Grid>
+//                 </Grid>
+//             ))}
+//         </div>
+// )
