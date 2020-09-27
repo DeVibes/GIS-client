@@ -34,10 +34,8 @@ export const editMeetup = async (meetupId, updatedMeetup) => {
 
     if (response.status !== 200)
         throw new Error(`Error in updating meetup`)
-    else {
-        const updatedMeetup = await response.json()
-        return updatedMeetup
-    }
+    else 
+        return await response.json()
 }
 
 export const deleteMeetupById = async (id) => {
@@ -46,6 +44,8 @@ export const deleteMeetupById = async (id) => {
         method: 'DELETE',
     })
 
-    const responseJson = await response.json()
-    return true
+    if (response.status !== 200)
+        throw new Error(`Error in updating user`)
+    else 
+        return await response.json()
 }

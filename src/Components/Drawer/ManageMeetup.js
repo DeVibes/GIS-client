@@ -13,14 +13,17 @@ import { makeStyles } from '@material-ui/core/styles';
 
 /* Components */
 import { MeetupCategories } from '../../Data/MeetupCategories'
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { ExpandLess, ExpandMore, FormatListNumberedRounded } from '@material-ui/icons';
 
 /* Redux */
 import { setIsManage } from '../../StateManagement/actions/manageMeetup'
 import { setSelectedMeetup } from '../../StateManagement/actions/selectedMeetup'
+import { setSnack } from '../../StateManagement/actions/snackPopup'
+import { setMeetups } from '../../StateManagement/actions/meetups'
+import { setIsPopupOpen } from '../../StateManagement/actions/isPopupOpen'
 
 /* Services */
-import { deleteMeetupById } from '../../Services/Meetups'
+import { deleteMeetupById, getAllMeetups } from '../../Services/Meetups'
 
 const styles = makeStyles((theme) => ({
     manageMeetup: {
@@ -33,6 +36,7 @@ export const ManageMeetup = () => {
     /* Redux states */
     let selectedMeetup = useSelector(({ selectedMeetup }) => selectedMeetup)
     let isManageOpen = useSelector(({ manageMeetup }) => manageMeetup)
+    let meetupsFilters = useSelector(({ meetupsFilters }) => meetupsFilters)
 
     /* Local states */
     const [isParticipantVisible, setIsParticipantVisible] = useState(false)
@@ -60,7 +64,23 @@ export const ManageMeetup = () => {
     }
 
     const handleDelete = async () => {
-        const isDeleted = await deleteMeetupById(selectedMeetup._id)
+        try {
+            const isDeleted = await deleteMeetupById(selectedMeetup._id)
+            const updatedMeetups = await getAllMeetups(meetupsFilters)
+            setMeetups(updatedMeetups)
+            setIsPopupOpen(false)
+            setSnack({
+                isSnackOpen: true,
+                msg: `Deleted successfully`,
+                isError: FormatListNumberedRounded
+            })
+        } catch ({ message }) {
+            setSnack({
+                isSnackOpen: true,
+                msg: message,
+                isError: true
+            })
+        }
     }
     
     return (
