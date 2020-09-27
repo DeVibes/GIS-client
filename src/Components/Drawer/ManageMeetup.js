@@ -5,32 +5,68 @@ import { Button,
     ListSubheader, 
     Grow,
     TextField,
-    MenuItem 
+    MenuItem, 
+    List,
+    ListItem, ListItemText, Collapse, ListItemSecondaryAction, Checkbox 
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 
 /* Components */
 import { MeetupCategories } from '../../Data/MeetupCategories'
+import { ExpandLess, ExpandMore } from '@material-ui/icons';
+
+/* Redux */
+import { setIsManage } from '../../StateManagement/actions/manageMeetup'
+import { setSelectedMeetup } from '../../StateManagement/actions/selectedMeetup'
+
+/* Services */
+import { deleteMeetupById } from '../../Services/Meetups'
 
 const styles = makeStyles((theme) => ({
     manageMeetup: {
-        padding: theme.spacing(0, 2, 0, 2)
+        display: 'flex',
+        flexDirection: 'column'
     }
 }))
 
 export const ManageMeetup = () => {
     /* Redux states */
     let selectedMeetup = useSelector(({ selectedMeetup }) => selectedMeetup)
+    let isManageOpen = useSelector(({ manageMeetup }) => manageMeetup)
 
-    let isOnEdit = true
+    /* Local states */
+    const [isParticipantVisible, setIsParticipantVisible] = useState(false)
+    const [editedMeetup, setEditedMeetup] = useState({
+        name: ``,
+        maxParticipants: null,
+        date: null,
+        participants: []
+    })
+
 
     const classes = styles()
+
+    /* Handlers */
+    const handleInputChange = (event) => {
+        let { name, value } = event.target
+        setEditedMeetup({
+            ...selectedMeetup,
+            [name]: value
+        })
+    }
+
+    const handleSave = () => {
+        setIsManage(!isManageOpen)
+    }
+
+    const handleDelete = async () => {
+        const isDeleted = await deleteMeetupById(selectedMeetup._id)
+    }
     
     return (
-        <Grow in={isOnEdit} timeout={1000}>
-            <>
-                <ListSubheader>Edit meetup</ListSubheader>
-                <div className={classes.manageMeetup}>
+        <Grow in={isManageOpen} timeout={1000}>
+            <List subheader={<ListSubheader>Edit meetup</ListSubheader>}>
+                <ListItem className={classes.manageMeetup}>
                     <TextField
                         margin="dense"
                         label="Name"
@@ -38,7 +74,7 @@ export const ManageMeetup = () => {
                         name="name"
                         fullWidth
                         value={selectedMeetup?.name}
-                        // onChange={handleInputChange}
+                        onChange={handleInputChange}
                         // error={
                         //     inputValidator.addressNickName.isValid == null ? false : !inputValidator.addressNickName.isValid
                         // }
@@ -47,12 +83,12 @@ export const ManageMeetup = () => {
                     />
                     <TextField
                         margin="dense"
-                        label="Max attendants"
+                        label="Max participants"
                         type="number"
-                        name="maxAttendants"
+                        name="maxParticipants"
                         fullWidth
-                        value={selectedMeetup?.maxAttendants}
-                        // onChange={handleInputChange}
+                        value={selectedMeetup?.maxParticipants || null}
+                        onChange={handleInputChange}
                         // error={
                         //     inputValidator.addressNickName.isValid == null ? false : !inputValidator.addressNickName.isValid
                         // }
@@ -65,7 +101,7 @@ export const ManageMeetup = () => {
                         select
                         name="category"
                         fullWidth
-                        // onChange={handleInputChange}
+                        onChange={handleInputChange}
                         value={selectedMeetup?.category}
                     >
                         {MeetupCategories.map((option, index) => (
@@ -82,13 +118,34 @@ export const ManageMeetup = () => {
                         fullWidth
                         readOnly
                         value={selectedMeetup?.date}
+                        onChange={handleInputChange}
                         // error={inputValidator.meetupDate || false}
-                        // onChange={handleInputChange}
-                    /> 
-                    <Button>Apply changes</Button>
-                    <Button>Delete button</Button>
-                </div>
-            </>
+                    />
+                </ListItem>
+                <ListItem button onClick={() => setIsParticipantVisible(!isParticipantVisible)}>
+                    <ListItemText primary="Participants list"/>
+                    {isParticipantVisible ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={isParticipantVisible} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        {selectedMeetup.participants.map((participant, index) => (
+                            <ListItem button key={index}>
+                                <ListItemText primary={participant}/>
+                                <ListItemSecondaryAction>
+                                    <Checkbox
+                                        edge="end"
+                                        // onChange={handleCategoriesFilter}
+                                        // checked={isParticipant(participant)}
+                                        name={participant}
+                                    />
+                                </ListItemSecondaryAction>
+                            </ListItem>
+                        ))}
+                    </List>
+                </Collapse>
+                    <Button onClick={handleSave}>Apply changes</Button>
+                    <Button onClick={handleDelete}>Delete meetup</Button>
+            </List>
         </Grow>
     )
 }

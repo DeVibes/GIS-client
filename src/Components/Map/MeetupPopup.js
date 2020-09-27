@@ -14,6 +14,7 @@ import { setSelectedMeetup } from "../../StateManagement/actions/selectedMeetup"
 import { updateMeetup } from "../../StateManagement/actions/meetups"
 import { setIsPopupOpen } from '../../StateManagement/actions/isPopupOpen'
 import { setSnack } from '../../StateManagement/actions/snackPopup'
+import { setIsManage } from '../../StateManagement/actions/manageMeetup'
 
 /* Services */
 import { editMeetup } from '../../Services/Meetups'
@@ -62,6 +63,7 @@ export const MeetupPopup = () => {
     let clickedMeetup = useSelector(({ selectedMeetup }) => selectedMeetup)
     let userData = useSelector(({ userData }) => userData)
     let isOpen = useSelector(({ isPopupOpen }) => isPopupOpen)
+    let isManageOpen = useSelector(({ manageMeetup }) => manageMeetup)
 
     /* Local states */
     const [addressNickName, setAddressNickName] = useState({
@@ -83,18 +85,18 @@ export const MeetupPopup = () => {
     }
 
     const handleAttendance = async (isAttending) => {
-        let meetupAttendants = clickedMeetup.attendants
+        let meetupParticipants = clickedMeetup.participants
         let msg
         if (isAttending) {
-            meetupAttendants.push(userData.username)
+            meetupParticipants.push(userData.username)
             msg = `Registered for this meetup`
         }
         else {
-            meetupAttendants = meetupAttendants.filter(attendant => attendant !== userData.username)
+            meetupParticipants = meetupParticipants.filter(participant => participant !== userData.username)
             msg = `Unregistered for this meetup`
         }
         const updatedMeetup = await editMeetup(clickedMeetup._id, { 
-            attendants: meetupAttendants 
+            meetupParticipants: meetupParticipants 
         })
         updateMeetup(updatedMeetup)
         setSelectedMeetup(updatedMeetup)
@@ -105,9 +107,11 @@ export const MeetupPopup = () => {
         })
     }
 
+    const handleManageClick = () => setIsManage(!isManageOpen)
+
     const isAddressAlreadySaved = () => !userData.savedAddresses.some(addressObject => addressObject.address === clickedMeetup.address)
 
-    const isUserAlreadySignedToMeetup = () => clickedMeetup.attendants.includes(userData.username)
+    const isUserAlreadySignedToMeetup = () => clickedMeetup.participants.includes(userData.username)
 
     const isAdminOfMeetup = () => userData.username === clickedMeetup.admin
 
@@ -160,7 +164,7 @@ export const MeetupPopup = () => {
                         </CardContent>
                         <CardActions className={classes.actions} >
                             {isAdminOfMeetup() &&
-                                <Button>Manage</Button>
+                                <Button onClick={() => handleManageClick()}>Manage</Button>
                             }
                             {isUserAlreadySignedToMeetup() ?
                                 <Button onClick={() => handleAttendance(false)}>

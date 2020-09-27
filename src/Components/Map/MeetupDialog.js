@@ -30,7 +30,7 @@ const initialInputValidationState = {
         isValid: null,
         errorMessage: null
     },
-    maxAttendants: {
+    maxParticipants: {
         isValid: null,
         errorMessage: null
     },
@@ -70,7 +70,7 @@ export const MeetupDialog = () => {
             case `name`: 
                 isValid = isNameValid(value)
                 break; 
-            case `maxAttendants`:
+            case `maxParticipants`:
                 isValid = Boolean(value)
                 break; 
             default: break;
@@ -124,13 +124,13 @@ export const MeetupDialog = () => {
                 />
                 <TextField
                     margin="dense"
-                    label="Max attendants"
+                    label="Max participants"
                     error={
-                        inputValidator.maxAttendants.isValid == null ? false :!inputValidator.maxAttendants.isValid
+                        inputValidator.maxParticipants.isValid == null ? false :!inputValidator.maxParticipants.isValid
                     }
-                    helperText={inputValidator.maxAttendants.errorMessage}
+                    helperText={inputValidator.maxParticipants.errorMessage}
                     type="number"
-                    name="maxAttendants"
+                    name="maxParticipants"
                     fullWidth
                     onChange={handleInputChange}
                 />

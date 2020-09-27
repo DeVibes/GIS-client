@@ -25,7 +25,7 @@ export const MeetupSearchPins = () => {
             coords: pinData.geometry.location,
             date: currentDate,
             admin: userData.username,
-            attendants: [userData.username]
+            participants: [userData.username]
         })
         setIsDialogOpen(true)
     }

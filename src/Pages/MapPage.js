@@ -66,7 +66,7 @@ export const MapPage = () => {
                 },
                 date: currentDate,
                 admin: userData.username,
-                attendants: [userData.username]
+                participants: [userData.username]
             })
             setIsPopupOpen(false)
             setIsDialogOpen(true)

@@ -1,4 +1,5 @@
 export const initialMeetupState = {
+    id: ``,
     name: ``,
     category: ``,
     date: ``,
@@ -8,8 +9,8 @@ export const initialMeetupState = {
         lng: 0
     },
     admin: ``,
-    attendants: [],
-    maxAttendants: 0
+    participants: [],
+    maxParticipants: 0
 }
 
 export const selectedMeetupReducer = (state = initialMeetupState, action) => {
@@ -49,18 +50,18 @@ export const selectedMeetupReducer = (state = initialMeetupState, action) => {
                 ...state,
                 latLng: action.payload
             }
-        case `SET_MEETUP_ATTENDANTS`:
+        case `SET_MEETUP_PARTICIPANTS`:
             if (Boolean(action.payload)) {
                 return {
                     ...state,
-                    attendants: [...state.attendants, action.payload]
+                    participants: [...state.participants, action.payload]
                 }
             }
             else {
-                let newAttendants = state.attendants.filter(attendant => attendant !== action.payload)
+                let newParticipants = state.participants.filter(participant => participant !== action.payload)
                 return { 
                     ...state,
-                    attendants: newAttendants
+                    participants: newParticipants
                 }
             }
         case `SET_MEETUP`:

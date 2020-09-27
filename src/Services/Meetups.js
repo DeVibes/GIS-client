@@ -48,3 +48,13 @@ export const editMeetup = async (meetupId, updatedMeetup) => {
         // updateMeetup(updatedMeetup)
     }
 }
+
+export const deleteMeetupById = async (id) => {
+    const response = await fetch(`${process.env.REACT_APP_SERVER}/meetups/${id}`, {
+        mode: 'cors',
+        method: 'DELETE',
+    })
+
+    const responseJson = await response.json()
+    return true
+}
