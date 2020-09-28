@@ -116,7 +116,10 @@ export const MeetupPopup = () => {
 
     }
 
-    const handleManageClick = () => setIsManage(!isManageOpen)
+    const handleManageClick = () => {
+        setIsPopupOpen(false)
+        setIsManage(!isManageOpen)
+    }
 
     const isAddressAlreadySaved = () => !userData.savedAddresses.some(addressObject => addressObject.address === clickedMeetup.address)
 

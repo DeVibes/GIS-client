@@ -65,11 +65,12 @@ export const setMeetupMaxParticipants = number => {
     })
 }
 
-export const setMeetupPartipant = participant => {
-    console.log(`Redux ~ setting meetup participant ${participant}`)
+export const setMeetupParticipants = participants => {
+    console.log(`Redux ~ setting meetup participants`)
+    console.log([...participants]);
     store.dispatch({
         type: `SET_MEETUP_PARTICIPANTS`,
-        payload: participant
+        payload: participants
     })
 }
 

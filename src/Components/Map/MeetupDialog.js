@@ -13,6 +13,7 @@ import { Dialog,
 /* Components */
 import { MeetupCategories } from '../../Data/MeetupCategories'
 import { initialMeetupState } from '../../StateManagement/reducers/selectedMeetupReducer'
+import { discardMilliseconds } from '../../Data/Date'
 
 /* Redux */
 import { setSelectedMeetup, resetSelecedMeetup } from '../../StateManagement/actions/selectedMeetup'
@@ -75,6 +76,8 @@ export const MeetupDialog = () => {
             case `maxParticipants`:
                 isValid = Boolean(value)
                 break; 
+            case `date`:
+                value = discardMilliseconds(value)
             default: break;
         }
         if (!isValid) errorMessage = `Incorrect value`

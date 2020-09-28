@@ -8,6 +8,7 @@ import { MapHeader } from '../Components/Map/MapHeader'
 import { MapLayer } from '../Components/Map/MapLayer'
 import { MeetupCategories } from '../Data/MeetupCategories'
 import { SnackbarPopup } from '../Components/Global/SnackbarPopup';
+import { getCurrentDate } from '../Data/Date'
 
 /* Redux */
 import { setSelectedMeetup } from '../StateManagement/actions/selectedMeetup'
@@ -71,8 +72,6 @@ export const MapPage = () => {
         try {
             const address = await getAddressByCoords(lat, lng)
             console.log(`Got address! ${address}`)
-            let currentDate = new Date().toISOString()
-            currentDate = currentDate.substring(0, currentDate.indexOf(':', currentDate.indexOf(':')+1))
             setSelectedMeetup({
                 category: MeetupCategories[0].value,
                 address: address,
@@ -80,7 +79,7 @@ export const MapPage = () => {
                     lat: lat,
                     lng: lng
                 },
-                date: currentDate,
+                date: getCurrentDate(),
                 admin: userData.username,
                 participants: [userData.username]
             })

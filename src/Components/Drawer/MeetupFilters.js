@@ -50,7 +50,6 @@ export const MeetupFilter = () => {
             updatedCategories.push(name)
         else
             updatedCategories.splice(updatedCategories.indexOf(name), 1)
-
         setCategoriesFilter(updatedCategories)
     }
 

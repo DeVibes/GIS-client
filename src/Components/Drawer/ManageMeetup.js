@@ -7,23 +7,28 @@ import { Button,
     TextField,
     MenuItem, 
     List,
-    ListItem, ListItemText, Collapse, ListItemSecondaryAction, Checkbox 
+    ListItem, ListItemText, Collapse, ListItemSecondaryAction, ListItemIcon 
 } from '@material-ui/core'
+import FaceIcon from '@material-ui/icons/Face';
 import { makeStyles } from '@material-ui/core/styles';
 
 /* Components */
 import { MeetupCategories } from '../../Data/MeetupCategories'
-import { ExpandLess, ExpandMore, FormatListNumberedRounded } from '@material-ui/icons';
+import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { discardMilliseconds } from '../../Data/Date'
 
 /* Redux */
 import { setIsManage } from '../../StateManagement/actions/manageMeetup'
-import { setSelectedMeetup } from '../../StateManagement/actions/selectedMeetup'
+import { setSelectedMeetup, setMeetupParticipants } from '../../StateManagement/actions/selectedMeetup'
 import { setSnack } from '../../StateManagement/actions/snackPopup'
 import { setMeetups } from '../../StateManagement/actions/meetups'
 import { setIsPopupOpen } from '../../StateManagement/actions/isPopupOpen'
 
 /* Services */
-import { deleteMeetupById, getAllMeetups } from '../../Services/Meetups'
+import { deleteMeetupById, getAllMeetups, editMeetup } from '../../Services/Meetups'
+
+/* Validation */
+import { isNameValid } from "../../Validation/newMeetupValidation"
 
 const styles = makeStyles((theme) => ({
     manageMeetup: {
@@ -31,6 +36,17 @@ const styles = makeStyles((theme) => ({
         flexDirection: 'column'
     }
 }))
+
+const initialInputValidationState = {
+    name: {
+        isValid: true,
+        errorMessage: null
+    },
+    maxParticipants: {
+        isValid: true,
+        errorMessage: null
+    },
+}
 
 export const ManageMeetup = () => {
     /* Redux states */
@@ -40,27 +56,76 @@ export const ManageMeetup = () => {
 
     /* Local states */
     const [isParticipantVisible, setIsParticipantVisible] = useState(false)
-    const [editedMeetup, setEditedMeetup] = useState({
-        name: ``,
-        maxParticipants: null,
-        date: null,
-        participants: []
-    })
-
+    const [inputValidator, setInputValidator] = useState(initialInputValidationState)
 
     const classes = styles()
+
+    const isFormValid = () => {
+        return Object.keys(inputValidator).every((key) => {
+            if (!Boolean(inputValidator[key].isValid)) {
+                setInputValidator({
+                    ...inputValidator,
+                    [key]: {
+                        isValid: false,
+                        errorMessage: `Empty field`
+                    }
+                })
+            }
+            return inputValidator[key].isValid === true
+        })
+    }
 
     /* Handlers */
     const handleInputChange = (event) => {
         let { name, value } = event.target
-        setEditedMeetup({
+        let isValid = true
+        let errorMessage = null
+
+        switch (name) {
+            case `name`: 
+                isValid = isNameValid(value)
+                break; 
+            case `maxParticipants`:
+                isValid = Boolean(value)
+                break; 
+            case `date`:
+                value = discardMilliseconds(value)
+                break
+            default: break;
+        }
+        if (!isValid) errorMessage = `Incorrect value`
+        setInputValidator({
+            ...inputValidator, 
+            [name]: {
+                isValid: isValid,
+                errorMessage: errorMessage
+            }})
+        setSelectedMeetup({
             ...selectedMeetup,
             [name]: value
         })
     }
 
-    const handleSave = () => {
-        setIsManage(!isManageOpen)
+    const handleSave = async () => {
+        if (isFormValid()) {
+            try {
+                const savedMeetup = await editMeetup(selectedMeetup._id, selectedMeetup)
+                const updatedMeetups = await getAllMeetups(meetupsFilters)
+                    setSnack({
+                        isSnackOpen: true,
+                        msg: `${savedMeetup.name} was updated successfully`,
+                        isError: false
+                    })
+                setMeetups(updatedMeetups)
+                setIsManage(!isManageOpen)
+            } catch ({ message }) {
+                setSnack({
+                    isSnackOpen: true,
+                    msg: message,
+                    isError: true
+                })
+            }
+        }
     }
 
     const handleDelete = async () => {
@@ -72,7 +137,7 @@ export const ManageMeetup = () => {
             setSnack({
                 isSnackOpen: true,
                 msg: `Deleted successfully`,
-                isError: FormatListNumberedRounded
+                isError: false
             })
         } catch ({ message }) {
             setSnack({
@@ -81,6 +146,16 @@ export const ManageMeetup = () => {
                 isError: true
             })
         }
+    }
+
+    const handleClose = () => {
+        setInputValidator(initialInputValidationState)
+        setIsManage(false)
+    }
+
+    const handleRemoveParticipant = participant => {
+        selectedMeetup.participants.splice(selectedMeetup.participants.indexOf(participant), 1)
+        setSelectedMeetup(selectedMeetup)
     }
     
     return (
@@ -93,12 +168,12 @@ export const ManageMeetup = () => {
                         type="text"
                         name="name"
                         fullWidth
-                        value={selectedMeetup?.name}
+                        value={selectedMeetup.name}
                         onChange={handleInputChange}
-                        // error={
-                        //     inputValidator.addressNickName.isValid == null ? false : !inputValidator.addressNickName.isValid
-                        // }
-                        // helperText={inputValidator.addressNickName.errorMessage}
+                        error={
+                            inputValidator.name.isValid == null ? false : !inputValidator.name.isValid
+                        }
+                        helperText={inputValidator.name.errorMessage}
 
                     />
                     <TextField
@@ -107,12 +182,12 @@ export const ManageMeetup = () => {
                         type="number"
                         name="maxParticipants"
                         fullWidth
-                        value={selectedMeetup?.maxParticipants || null}
+                        value={selectedMeetup?.maxParticipants}
                         onChange={handleInputChange}
-                        // error={
-                        //     inputValidator.addressNickName.isValid == null ? false : !inputValidator.addressNickName.isValid
-                        // }
-                        // helperText={inputValidator.addressNickName.errorMessage}
+                        error={
+                            inputValidator.maxParticipants.isValid == null ? false : !inputValidator.maxParticipants.isValid
+                        }
+                        helperText={inputValidator.maxParticipants.errorMessage}
 
                     />
                     <TextField
@@ -136,9 +211,9 @@ export const ManageMeetup = () => {
                         type="datetime-local"
                         name="date"
                         fullWidth
-                        readOnly
                         value={selectedMeetup?.date}
                         onChange={handleInputChange}
+                        readOnly
                         // error={inputValidator.meetupDate || false}
                     />
                 </ListItem>
@@ -149,22 +224,26 @@ export const ManageMeetup = () => {
                 <Collapse in={isParticipantVisible} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
                         {selectedMeetup.participants.map((participant, index) => (
-                            <ListItem button key={index}>
+                            <ListItem key={index}>
+                                <ListItemIcon>
+                                    <FaceIcon/>
+                                </ListItemIcon>
                                 <ListItemText primary={participant}/>
-                                <ListItemSecondaryAction>
-                                    <Checkbox
+                                {/* <ListItemSecondaryAction>
+                                    <Button
                                         edge="end"
-                                        // onChange={handleCategoriesFilter}
-                                        // checked={isParticipant(participant)}
-                                        name={participant}
-                                    />
-                                </ListItemSecondaryAction>
+                                        onClick={() => handleRemoveParticipant(participant)}
+                                    >
+                                        remove participant
+                                    </Button> 
+                                </ListItemSecondaryAction> */}
                             </ListItem>
                         ))}
                     </List>
                 </Collapse>
                     <Button onClick={handleSave}>Apply changes</Button>
                     <Button onClick={handleDelete}>Delete meetup</Button>
+                    <Button onClick={handleClose}>Close</Button>
             </List>
         </Grow>
     )
