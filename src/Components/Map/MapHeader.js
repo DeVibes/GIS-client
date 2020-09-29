@@ -27,6 +27,7 @@ import { setIsProfileOpen } from '../../StateManagement/actions/isProfileOpen'
 
 /* Services */
 import { getAddressByString } from '../../Services/GoogleAPI'
+import { setIsAddressesOpen } from '../../StateManagement/actions/isAddressesOpen';
 
 const drawerWidth = 300
 
@@ -181,6 +182,11 @@ export const MapHeader = ({ recenterMap }) => {
         }
     }
 
+    const handleAddressesClick = () => {
+        handleAccountClose()
+        setIsAddressesOpen(true)
+    }
+
     return (
         <>
             <CssBaseline />
@@ -231,6 +237,7 @@ export const MapHeader = ({ recenterMap }) => {
                         onClose={handleAccountClose}
                     >
                         <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+                        <MenuItem onClick={handleAddressesClick}>Saved addresses</MenuItem>
                         <MenuItem onClick={handleLogOut}>Log out</MenuItem>
                     </Menu>
                 </Toolbar>

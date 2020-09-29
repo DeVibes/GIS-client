@@ -1,5 +1,6 @@
 import { combineReducers } from "redux"
 
+import { addressesReducer } from "./addressesReducer"
 import { dialogReducer } from "./dialogReducer"
 import { loginDataReducer } from "./loginDataReducer"
 import { manageMeetupReducer } from "./manageMeetupReducer"
@@ -13,16 +14,17 @@ import { snackReducer } from "./snackReducer"
 import { userDataReducer } from "./userDataReducer"
 
 export default combineReducers({
-    meetups: meetupsReducer,
-    selectedMeetup: selectedMeetupReducer,
-    userData: userDataReducer,
-    loginData: loginDataReducer,
     isDialogOpen: dialogReducer,
-    isProfileOpen: profileReducer,
+    isManageOpen: manageMeetupReducer,
+    isAddressesOpen: addressesReducer,
     isPopupOpen: popupReducer,
-    snackPopup: snackReducer,
-    searchQuery: searchQueryReducer,
+    isProfileOpen: profileReducer,
+    loginData: loginDataReducer,
+    meetups: meetupsReducer,
     meetupsFilters: meetupsFiltersReducer,
-    manageMeetup: manageMeetupReducer
+    searchQuery: searchQueryReducer,
+    selectedMeetup: selectedMeetupReducer,
+    snackPopup: snackReducer,
+    userData: userDataReducer,
 })
 

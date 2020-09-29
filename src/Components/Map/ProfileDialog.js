@@ -81,11 +81,6 @@ export const ProfileDialog = () => {
         setInputValidator(initialInputValidationState)
     }
 
-    // const handleAddMeetup = () => {
-    //     //TODO add meetup on saved location
-    //     console.log(`object`)
-    // }
-
     const handleSave = async () => {
         if (isFormValid()) {
             try {

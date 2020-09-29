@@ -98,6 +98,7 @@ export const MeetupFilter = () => {
                 </Collapse>
             </List>
             <Button onClick={handleApplyClick}>Apply</Button>
+            <Divider/>
         </>
     )
 }

@@ -7,6 +7,7 @@ import { Button,
     TextField,
     MenuItem, 
     List,
+    Divider,
     ListItem, ListItemText, Collapse, ListItemSecondaryAction, ListItemIcon 
 } from '@material-ui/core'
 import FaceIcon from '@material-ui/icons/Face';
@@ -51,7 +52,7 @@ const initialInputValidationState = {
 export const ManageMeetup = () => {
     /* Redux states */
     let selectedMeetup = useSelector(({ selectedMeetup }) => selectedMeetup)
-    let isManageOpen = useSelector(({ manageMeetup }) => manageMeetup)
+    let isManageOpen = useSelector(({ isManageOpen }) => isManageOpen)
     let meetupsFilters = useSelector(({ meetupsFilters }) => meetupsFilters)
 
     /* Local states */
@@ -134,6 +135,7 @@ export const ManageMeetup = () => {
             const updatedMeetups = await getAllMeetups(meetupsFilters)
             setMeetups(updatedMeetups)
             setIsPopupOpen(false)
+            setIsManage(false)
             setSnack({
                 isSnackOpen: true,
                 msg: `Deleted successfully`,
@@ -244,6 +246,7 @@ export const ManageMeetup = () => {
                     <Button onClick={handleSave}>Apply changes</Button>
                     <Button onClick={handleDelete}>Delete meetup</Button>
                     <Button onClick={handleClose}>Close</Button>
+                <Divider/>
             </List>
         </Grow>
     )

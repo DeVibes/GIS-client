@@ -140,6 +140,7 @@ export const MeetupDialog = () => {
                     name="name"
                     fullWidth
                     onChange={handleInputChange}
+                    value={selectedMeetup?.name || ''}
                 />
                 <TextField
                     margin="dense"

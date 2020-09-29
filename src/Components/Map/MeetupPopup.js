@@ -15,6 +15,8 @@ import { updateMeetup } from "../../StateManagement/actions/meetups"
 import { setIsPopupOpen } from '../../StateManagement/actions/isPopupOpen'
 import { setSnack } from '../../StateManagement/actions/snackPopup'
 import { setIsManage } from '../../StateManagement/actions/manageMeetup'
+import { setUserData } from '../../StateManagement/actions/userData'
+import { setIsAddressesOpen } from '../../StateManagement/actions/isAddressesOpen'
 
 /* Services */
 import { editMeetup } from '../../Services/Meetups'
@@ -117,6 +119,7 @@ export const MeetupPopup = () => {
     }
 
     const handleManageClick = () => {
+        setIsAddressesOpen(false)
         setIsPopupOpen(false)
         setIsManage(!isManageOpen)
     }
@@ -172,6 +175,7 @@ export const MeetupPopup = () => {
                                 currentAddress={clickedMeetup.address}
                                 addressNickName={addressNickName}
                                 setAddressNickName={setAddressNickName}
+                                currentCoords={clickedMeetup.coords}
                             /> 
                         </CardContent>
                         <CardActions className={classes.actions} >
@@ -191,7 +195,7 @@ export const MeetupPopup = () => {
                                 onClick={() => handleShowSaveAddress()}
                                 disabled={!isAddressAlreadySaved()}
                             >
-                                Save thiss address
+                                Save this address
                             </Button>
                         </CardActions>         
                     </Card>
@@ -201,7 +205,7 @@ export const MeetupPopup = () => {
     )
 }
 
-const SaveAddressField = ({ userData, currentAddress, addressNickName, setAddressNickName }) => {
+const SaveAddressField = ({ userData, currentAddress, addressNickName, setAddressNickName, currentCoords }) => {
     const classes = useStyles()
 
     const initialInputValidationState = {
@@ -252,7 +256,8 @@ const SaveAddressField = ({ userData, currentAddress, addressNickName, setAddres
                 id: userData.id,
                 savedAddresses: [...userData.savedAddresses, {
                     nickName: addressNickName.nicknameValue,
-                    address: currentAddress
+                    address: currentAddress,
+                    coords: currentCoords
                 }]
             })
             setSnack({
@@ -264,6 +269,7 @@ const SaveAddressField = ({ userData, currentAddress, addressNickName, setAddres
                 isVisible: false,
                 nicknameValue: null
             })
+            setUserData(response)
         }
     }
     return (
