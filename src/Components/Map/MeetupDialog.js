@@ -78,6 +78,7 @@ export const MeetupDialog = () => {
                 break; 
             case `date`:
                 value = discardMilliseconds(value)
+                break;
             default: break;
         }
         if (!isValid) errorMessage = `Incorrect value`
@@ -190,6 +191,16 @@ export const MeetupDialog = () => {
                         readOnly: true
                     }}
                     value={selectedMeetup?.address}
+                />
+                <TextField
+                    margin="dense"
+                    label="Description"
+                    name="description"
+                    multiline
+                    rowsMax={4}
+                    fullWidth
+                    value={selectedMeetup?.description}
+                    onChange={handleInputChange}
                 />
             </DialogContent>
             <DialogActions>

@@ -133,7 +133,7 @@ export const LoginStep = ({ stepChange }) => {
                             name="username"
                             fullWidth
                             onChange={handleInputChange}
-                            value={loginData?.username}
+                            value={loginData?.username || ''}
                         />
                     </Grid>
                 </Grid>

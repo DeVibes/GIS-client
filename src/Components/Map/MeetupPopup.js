@@ -2,9 +2,13 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { InfoWindow } from '@react-google-maps/api'
-import { Avatar, Card, CardContent, CardHeader, CardMedia, Typography, CardActions, Button, Grow, TextField, Paper } from '@material-ui/core';
+import { Avatar, Card, CardContent, CardHeader, CardMedia, Typography, CardActions, Button, Grow, TextField, Grid} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { red } from '@material-ui/core/colors';
+import { green, red } from '@material-ui/core/colors';
+import PlaceIcon from '@material-ui/icons/Place';
+import ScheduleIcon from '@material-ui/icons/Schedule';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import HowToRegIcon from '@material-ui/icons/HowToReg';
 
 /* Components */
 import { initialMeetupState } from '../../StateManagement/reducers/selectedMeetupReducer'
@@ -17,6 +21,7 @@ import { setSnack } from '../../StateManagement/actions/snackPopup'
 import { setIsManage } from '../../StateManagement/actions/manageMeetup'
 import { setUserData } from '../../StateManagement/actions/userData'
 import { setIsAddressesOpen } from '../../StateManagement/actions/isAddressesOpen'
+import { setIsAddAddressOpen } from '../../StateManagement/actions/AddAddressData';
 
 /* Services */
 import { editMeetup } from '../../Services/Meetups'
@@ -38,6 +43,9 @@ const useStyles = makeStyles((theme) =>({
     title: {
         color: red[500]
     },
+    attendance: {
+        color: green[500]
+    },
     avatar: {
         backgroundColor: red[500]
     },
@@ -55,28 +63,22 @@ const useStyles = makeStyles((theme) =>({
         display: `flex`,
         justifyContent: `flex-end`
     },
-    addressWrapper: {
-        display: `flex`,
+    desc: {
+        marginTop: 10
     }
 }))
 
 export const MeetupPopup = () => {
     /* Redux states */
     let clickedMeetup = useSelector(({ selectedMeetup }) => selectedMeetup)
+    let placesLeft = useSelector(({ selectedMeetup }) => selectedMeetup.maxParticipants - selectedMeetup.participants.length)
     let userData = useSelector(({ userData }) => userData)
     let isOpen = useSelector(({ isPopupOpen }) => isPopupOpen)
     let isManageOpen = useSelector(({ manageMeetup }) => manageMeetup)
 
-    /* Local states */
-    const [addressNickName, setAddressNickName] = useState({
-        isVisible: false,
-        nicknameValue: null
-    })
-
-    const handleShowSaveAddress = () => setAddressNickName({
-        ...addressNickName,
-        isVisible: true
-    })
+    const handleShowSaveAddress = () => {
+        setIsAddAddressOpen(true);
+    }
 
     const classes = useStyles()
 
@@ -99,7 +101,7 @@ export const MeetupPopup = () => {
         }
         try {
             const updatedMeetup = await editMeetup(clickedMeetup._id, { 
-                meetupParticipants: meetupParticipants 
+                participants: meetupParticipants 
             })
             updateMeetup(updatedMeetup)
             setSelectedMeetup(updatedMeetup)
@@ -150,7 +152,11 @@ export const MeetupPopup = () => {
                                     {clickedMeetup.name}
                                 </Typography>
                             }
-                            subheader={clickedMeetup.date}
+                            subheader={isUserAlreadySignedToMeetup() && (
+                                <Typography variant="h6" className={classes.attendance}>
+                                    Already signed up!
+                                </Typography>
+                            )}
                             className={classes.header}
                         />
                         <CardMedia
@@ -158,25 +164,56 @@ export const MeetupPopup = () => {
                             className={classes.media}
                             src={`/${clickedMeetup.category}Back.jpg`}
                         />
-                        <CardContent>
-                            <Typography variant="subtitle2">
-                                About the meetup:
+                        <CardContent className={classes.content}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={2}>
+                                    <PlaceIcon/>
+                                </Grid>
+                                <Grid item xs={10}>
+                                    <Typography variant="subtitle2">
+                                        {clickedMeetup.address}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={2}>
+                                <Grid item xs={2}>
+                                    <ScheduleIcon/>
+                                </Grid>
+                                <Grid item xs={10}>
+                                    <Typography variant="subtitle2">
+                                        {new Date(clickedMeetup.date).toLocaleTimeString()}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={2}>
+                                <Grid item xs={2}>
+                                    <EventAvailableIcon/>
+                                </Grid>
+                                <Grid item xs={10}>
+                                    <Typography variant="subtitle2">
+                                        {new Date(clickedMeetup.date).toDateString()}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={2}>
+                                <Grid item xs={2}>
+                                    <HowToRegIcon/>
+                                </Grid>
+                                <Grid item xs={10}>
+                                    {placesLeft === 0 ?
+                                        <Typography variant="subtitle2">
+                                            Full
+                                        </Typography>
+                                        :
+                                        <Typography variant="subtitle2">
+                                            {placesLeft } places left
+                                        </Typography>
+                                    }
+                                </Grid>
+                            </Grid>
+                            <Typography paragraph variant="body1" className={classes.desc}>
+                                {clickedMeetup.description}
                             </Typography>
-                            <Typography paragraph>
-                                Some meetup data
-                            </Typography>
-                            {isUserAlreadySignedToMeetup() &&
-                                <Typography variant="h4">
-                                    Ur in!
-                                </Typography>
-                            }
-                            <SaveAddressField 
-                                userData={userData}
-                                currentAddress={clickedMeetup.address}
-                                addressNickName={addressNickName}
-                                setAddressNickName={setAddressNickName}
-                                currentCoords={clickedMeetup.coords}
-                            /> 
                         </CardContent>
                         <CardActions className={classes.actions} >
                             {isAdminOfMeetup() &&
@@ -205,94 +242,3 @@ export const MeetupPopup = () => {
     )
 }
 
-const SaveAddressField = ({ userData, currentAddress, addressNickName, setAddressNickName, currentCoords }) => {
-    const classes = useStyles()
-
-    const initialInputValidationState = {
-        addressNickName: {
-            isValid: null,
-            errorMessage: null
-        },
-    }
-
-    /* Local states */
-    const [inputValidator, setInputValidator] = useState(initialInputValidationState)
-
-    const handleNickNameChange = (e) => {
-        let { value } = e.target
-        let isValid = isNameValid(value)
-        let errorMessage = null
-        if (!isValid) 
-            errorMessage = `Incorrect value`
-        setInputValidator({
-            ...inputValidator, 
-            addressNickName: {
-                isValid: isValid,
-                errorMessage: errorMessage
-            }})
-        setAddressNickName({
-            ...addressNickName,
-            nicknameValue: value
-        })
-    }
-
-    const isInputValid = () => {
-        if (!Boolean(inputValidator.addressNickName.isValid)) {
-            setInputValidator({
-                ...inputValidator,
-                addressNickName: {
-                    isValid: false,
-                    errorMessage: `Empty field`
-                }
-            })
-            return false
-        }
-        return true
-    }
-
-    const handleSaveAddress = async () => {
-        if (isInputValid()) {
-            const response = await updateUser({
-                id: userData.id,
-                savedAddresses: [...userData.savedAddresses, {
-                    nickName: addressNickName.nicknameValue,
-                    address: currentAddress,
-                    coords: currentCoords
-                }]
-            })
-            setSnack({
-                isSnackOpen: true,
-                msg: `saved`,
-                isError: false
-            })
-            setAddressNickName({
-                isVisible: false,
-                nicknameValue: null
-            })
-            setUserData(response)
-        }
-    }
-    return (
-        <>
-            {addressNickName.isVisible && (
-                <Grow in={addressNickName.isVisible} timeout={700}>
-                    <div className={classes.addressWrapper}>
-                        <TextField
-                            margin="dense"
-                            label="Address nickname"
-                            error={
-                                inputValidator.addressNickName.isValid == null ? false : !inputValidator.addressNickName.isValid
-                            }
-                            helperText={inputValidator.addressNickName.errorMessage}
-                            type="text"
-                            name="addressNickName"
-                            fullWidth
-                            onChange={handleNickNameChange}
-                        />
-                        <Button onClick={() => handleSaveAddress()}>Save it</Button>
-                    </div>
-                </Grow>
-            )}
-        </>
-    )
-}

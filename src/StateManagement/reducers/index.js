@@ -1,6 +1,7 @@
 import { combineReducers } from "redux"
 
 import { addressesReducer } from "./addressesReducer"
+import { addAddressDataReducer } from "./addAddressDataReducer"
 import { dialogReducer } from "./dialogReducer"
 import { loginDataReducer } from "./loginDataReducer"
 import { manageMeetupReducer } from "./manageMeetupReducer"
@@ -14,6 +15,7 @@ import { snackReducer } from "./snackReducer"
 import { userDataReducer } from "./userDataReducer"
 
 export default combineReducers({
+    addAddressData: addAddressDataReducer,
     isDialogOpen: dialogReducer,
     isManageOpen: manageMeetupReducer,
     isAddressesOpen: addressesReducer,

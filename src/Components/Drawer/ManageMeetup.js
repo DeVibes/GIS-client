@@ -8,7 +8,7 @@ import { Button,
     MenuItem, 
     List,
     Divider,
-    ListItem, ListItemText, Collapse, ListItemSecondaryAction, ListItemIcon 
+    ListItem, ListItemText, Collapse, ListItemIcon 
 } from '@material-ui/core'
 import FaceIcon from '@material-ui/icons/Face';
 import { makeStyles } from '@material-ui/core/styles';
@@ -20,7 +20,7 @@ import { discardMilliseconds } from '../../Data/Date'
 
 /* Redux */
 import { setIsManage } from '../../StateManagement/actions/manageMeetup'
-import { setSelectedMeetup, setMeetupParticipants } from '../../StateManagement/actions/selectedMeetup'
+import { setSelectedMeetup } from '../../StateManagement/actions/selectedMeetup'
 import { setSnack } from '../../StateManagement/actions/snackPopup'
 import { setMeetups } from '../../StateManagement/actions/meetups'
 import { setIsPopupOpen } from '../../StateManagement/actions/isPopupOpen'
@@ -131,7 +131,7 @@ export const ManageMeetup = () => {
 
     const handleDelete = async () => {
         try {
-            const isDeleted = await deleteMeetupById(selectedMeetup._id)
+            await deleteMeetupById(selectedMeetup._id)
             const updatedMeetups = await getAllMeetups(meetupsFilters)
             setMeetups(updatedMeetups)
             setIsPopupOpen(false)
@@ -155,10 +155,10 @@ export const ManageMeetup = () => {
         setIsManage(false)
     }
 
-    const handleRemoveParticipant = participant => {
-        selectedMeetup.participants.splice(selectedMeetup.participants.indexOf(participant), 1)
-        setSelectedMeetup(selectedMeetup)
-    }
+    // const handleRemoveParticipant = participant => {
+    //     selectedMeetup.participants.splice(selectedMeetup.participants.indexOf(participant), 1)
+    //     setSelectedMeetup(selectedMeetup)
+    // }
     
     return (
         <Grow in={isManageOpen} timeout={1000}>

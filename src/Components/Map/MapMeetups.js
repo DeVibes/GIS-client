@@ -27,7 +27,7 @@ export const MapMeetups = () => {
             }
         }
         fetchData()
-    }, [])
+    }, [meetupsFilters])
 
     const onMeetupClick = (id) => {
         let selectedMeetup = meetups.find(m => m._id === id)

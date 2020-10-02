@@ -1,7 +1,7 @@
 /* Libraries */
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Button, Divider, Grow, List, ListItem, ListItemSecondaryAction, ListItemText, ListSubheader, TextField, Typography } from '@material-ui/core'
+import { Button, Divider, Grow, List, ListItem, ListItemText, ListSubheader, TextField, Typography } from '@material-ui/core'
 
 /*Components */
 import { MeetupCategories } from '../../Data/MeetupCategories'
@@ -138,39 +138,44 @@ export const SavedAddress = () => {
                 </List>
             </Grow>
             <Divider/>
-            <Grow in={Boolean(isOnEdit.nickName)} timeout={1000}>
-                <List subheader={<ListSubheader>Edit saved address</ListSubheader>}>
-                    <ListItem>
-                        <TextField
-                            margin="dense"
-                            label="Nickname"
-                            type="text"
-                            fullWidth
-                            name="nickname"
-                            value={isOnEdit?.nickName || ``}
-                            onChange={handleInputChange}
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <TextField
-                            margin="dense"
-                            label="Address"
-                            type="text"
-                            fullWidth
-                            name="address"
-                            value={isOnEdit?.address || ``}
-                            InputProps={{
-                                readOnly: true
-                            }}
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <Button onClick={() => handleCreate()}>Create meetup</Button>
-                        <Button onClick={() => handleDelete()}>Delete address</Button>
-                        <Button onClick={() => handleSubmit()}>Save changes</Button>
-                    </ListItem>
-                </List>
-            </Grow>
+            {Boolean(isOnEdit.nickName) && (
+                <>
+                    <Grow in={Boolean(isOnEdit.nickName)} timeout={1000}>
+                        <List subheader={<ListSubheader>Edit saved address</ListSubheader>}>
+                            <ListItem>
+                                <TextField
+                                    margin="dense"
+                                    label="Nickname"
+                                    type="text"
+                                    fullWidth
+                                    name="nickname"
+                                    value={isOnEdit?.nickName || ``}
+                                    onChange={handleInputChange}
+                                />
+                            </ListItem>
+                            <ListItem>
+                                <TextField
+                                    margin="dense"
+                                    label="Address"
+                                    type="text"
+                                    fullWidth
+                                    name="address"
+                                    value={isOnEdit?.address || ``}
+                                    InputProps={{
+                                        readOnly: true
+                                    }}
+                                />
+                            </ListItem>
+                            <ListItem>
+                                <Button onClick={() => handleCreate()}>Create meetup</Button>
+                                <Button onClick={() => handleDelete()}>Delete address</Button>
+                                <Button onClick={() => handleSubmit()}>Save changes</Button>
+                            </ListItem>
+                        </List>
+                    </Grow>
+                    <Divider/>
+                </>
+            )}
         </>
     )
 }

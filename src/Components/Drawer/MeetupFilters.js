@@ -8,16 +8,13 @@ import { Button,
     ListItem, 
     ListItemIcon, 
     ListItemText, 
-    Typography,  
     ListSubheader, 
     ListItemSecondaryAction,
     Checkbox,
-    Grow,
-    TextField,
-    MenuItem 
 } from '@material-ui/core'
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+
 
 /* Components */
 import { MeetupCategories } from '../../Data/MeetupCategories'
@@ -66,7 +63,7 @@ export const MeetupFilter = () => {
                     <ListItemText primary="Im attending"/>
                     <ListItemSecondaryAction>
                         <Checkbox
-                            checked={meetupsFilters.attendance}
+                            // checked={meetupsFilters.attendance}
                             onChange={handleAttendenceFilter}
                             name="attendance"
                         />

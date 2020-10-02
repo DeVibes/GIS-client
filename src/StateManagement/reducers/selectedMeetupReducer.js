@@ -10,7 +10,8 @@ export const initialMeetupState = {
     },
     admin: ``,
     participants: [],
-    maxParticipants: 0
+    maxParticipants: 0,
+    description: ``,
 }
 
 export const selectedMeetupReducer = (state = initialMeetupState, action) => {

@@ -4,17 +4,12 @@ import { useSelector } from 'react-redux'
 import { Dialog, 
     DialogContent, 
     DialogTitle, 
-    Divider, 
     TextField, 
     Typography, 
-    List, 
-    ListItem, 
-    ListSubheader, 
-    Grid, 
     DialogActions,
     Button } 
 from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 
 /* Redux */
 import { setIsProfileOpen } from '../../StateManagement/actions/isProfileOpen'
@@ -28,15 +23,15 @@ import { updateUser } from '../../Services/Users'
 import { isNameValid } from "../../Validation/userValidation"
 import { isPhoneValid } from "../../Validation/userValidation"
 
-const styles = makeStyles((theme) => ({
-    addressesContainer: {
-        maxHeight: `20vh`,
-        overflow: `auto`
-    },
-    textField: {
+// const styles = makeStyles((theme) => ({
+//     addressesContainer: {
+//         maxHeight: `20vh`,
+//         overflow: `auto`
+//     },
+//     textField: {
         
-    }
-}))
+//     }
+// }))
 
 const initialInputValidationState = {
     personName: {
@@ -57,7 +52,7 @@ export const ProfileDialog = () => {
     /* Local states */
     const [inputValidator, setInputValidator] = useState(initialInputValidationState)
 
-    const classes = styles()
+    // const classes = styles()
 
     const isFormValid = () => {
         return Object.keys(inputValidator).every((key) => {

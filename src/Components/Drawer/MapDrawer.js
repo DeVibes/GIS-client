@@ -5,14 +5,16 @@ import { Divider,
     Typography, 
 } from '@material-ui/core'
 
-import { MeetupFilter } from './MeetupFilters'
+import { AddAddress } from './AddAddress'
 import { ManageMeetup } from './ManageMeetup'
+import { MeetupFilter } from './MeetupFilters'
 import { SavedAddress } from './SavedAddress'
 
 export const MapDrawer = () => {
     /* Redux states */
     let isManageOpen = useSelector(({ isManageOpen }) => isManageOpen)
     let isAddressesOpen = useSelector(({ isAddressesOpen }) => isAddressesOpen)
+    let isAddAddressOpen = useSelector(({ addAddressData }) => addAddressData.isOpen)
 
     return (
         <>
@@ -26,6 +28,9 @@ export const MapDrawer = () => {
             )}
             {isAddressesOpen && (
                 <SavedAddress/>
+            )}
+            {isAddAddressOpen && (
+                <AddAddress/>
             )}
         </>
     )
