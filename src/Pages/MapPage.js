@@ -104,6 +104,10 @@ export const MapPage = () => {
                     onLoad={onMapLoad}
                     center={userData.coords}
                     zoom={15}
+                    options={{
+                        streetViewControl: false,
+                        zoomControlOptions: false,
+                    }}
                     onClick={(event) =>{handleMapClick(event)}}
                     >
                     <MapLayer/>
