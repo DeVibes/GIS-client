@@ -154,7 +154,7 @@ export const MeetupPopup = () => {
                             }
                             subheader={isUserAlreadySignedToMeetup() && (
                                 <Typography variant="h6" className={classes.attendance}>
-                                    Already signed up!
+                                    Attending
                                 </Typography>
                             )}
                             className={classes.header}

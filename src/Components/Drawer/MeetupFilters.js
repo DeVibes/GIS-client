@@ -50,10 +50,6 @@ export const MeetupFilter = () => {
         setCategoriesFilter(updatedCategories)
     }
 
-    const handleApplyClick = () => {
-        getAllMeetups(meetupsFilters)
-    }
-
     const isCategoryExist = (categoryValue) => meetupsFilters.categories.some((category) => category === categoryValue)
 
     return (
@@ -63,7 +59,7 @@ export const MeetupFilter = () => {
                     <ListItemText primary="Im attending"/>
                     <ListItemSecondaryAction>
                         <Checkbox
-                            // checked={meetupsFilters.attendance}
+                            checked={Boolean(meetupsFilters.attendance)}
                             onChange={handleAttendenceFilter}
                             name="attendance"
                         />
@@ -94,7 +90,6 @@ export const MeetupFilter = () => {
                     </List>
                 </Collapse>
             </List>
-            <Button onClick={handleApplyClick}>Apply</Button>
             <Divider/>
         </>
     )

@@ -8,6 +8,7 @@ import { setSelectedMeetup } from '../../StateManagement/actions/selectedMeetup'
 import { setIsPopupOpen } from '../../StateManagement/actions/isPopupOpen'
 import { setMeetups } from '../../StateManagement/actions/meetups'
 import { setIsManage } from '../../StateManagement/actions/manageMeetup'
+import { resetAddAddressData } from '../../StateManagement/actions/AddAddressData'
 
 /* Services */
 import { getAllMeetups } from '../../Services/Meetups'
@@ -33,6 +34,7 @@ export const MapMeetups = () => {
         let selectedMeetup = meetups.find(m => m._id === id)
         setSelectedMeetup(selectedMeetup)
         setIsManage(false)
+        resetAddAddressData()
         setIsPopupOpen(true)
     }
 

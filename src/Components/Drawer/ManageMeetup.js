@@ -218,6 +218,16 @@ export const ManageMeetup = () => {
                         readOnly
                         // error={inputValidator.meetupDate || false}
                     />
+                    <TextField
+                        margin="dense"
+                        label="Description"
+                        name="description"
+                        fullWidth
+                        multiline
+                        rowsMax={4}
+                        value={selectedMeetup?.description || ``}
+                        onChange={handleInputChange}
+                    />
                 </ListItem>
                 <ListItem button onClick={() => setIsParticipantVisible(!isParticipantVisible)}>
                     <ListItemText primary="Participants list"/>
