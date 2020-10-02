@@ -106,7 +106,7 @@ export const MapPage = () => {
                     zoom={15}
                     options={{
                         streetViewControl: false,
-                        zoomControlOptions: false,
+                        zoomControl: false,
                     }}
                     onClick={(event) =>{handleMapClick(event)}}
                     >
