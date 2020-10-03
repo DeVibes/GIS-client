@@ -85,6 +85,7 @@ export const ProfileDialog = () => {
                     msg: `Done`,
                     isError: false
                 })
+                handleClose()
             } catch ({ message }) {
                 setSnack({
                     isSnackOpen: true,
