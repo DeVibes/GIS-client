@@ -35,11 +35,11 @@ import { isPhoneValid } from "../../Validation/userValidation"
 
 const initialInputValidationState = {
     personName: {
-        isValid: null,
+        isValid: true,
         errorMessage: null
     },
     phone: {
-        isValid: null,
+        isValid: true,
         errorMessage: null
     },
 }
@@ -70,7 +70,6 @@ export const ProfileDialog = () => {
     }
 
     /* Handlers */
-
     const handleClose = () => {
         setIsProfileOpen(false)
         setInputValidator(initialInputValidationState)
@@ -130,9 +129,8 @@ export const ProfileDialog = () => {
         >
             <DialogTitle>Edit profile</DialogTitle>
             <DialogContent>
-                <Typography variant="h6">Personal information</Typography>
+                <Typography variant="subtitle2">Personal information</Typography>
                 <TextField 
-                    variant="outlined"
                     margin="normal"
                     label="Username"
                     type="text"
@@ -145,7 +143,6 @@ export const ProfileDialog = () => {
                     disabled
                 />
                 <TextField 
-                    variant="outlined"
                     margin="normal"
                     label="Name"
                     type="text"
@@ -159,7 +156,6 @@ export const ProfileDialog = () => {
                     helperText={inputValidator.personName.errorMessage}
                 />
                 <TextField 
-                    variant="outlined"
                     margin="normal"
                     label="Phone"
                     type="number"
@@ -174,8 +170,8 @@ export const ProfileDialog = () => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>Back</Button>
-                <Button onClick={() => handleSave()}>Save changes</Button>
+                <Button onClick={handleClose} color="primary">Back</Button>
+                <Button onClick={() => handleSave()} color="primary">Save changes</Button>
             </DialogActions>
         </Dialog>
     )

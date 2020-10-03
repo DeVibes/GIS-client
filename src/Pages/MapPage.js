@@ -37,7 +37,7 @@ export const MapPage = () => {
         async function fetchUser(loggedUser) {
             const user = await getUserDataByUsername(loggedUser)
             setUserData({
-                id: user._id,
+                _id: user._id,
                 username: user.username,
                 personName: user.personName,
                 phone: user.phone,

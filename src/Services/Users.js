@@ -48,10 +48,10 @@ export const getUserDataByUsername = async (username) => {
 }
 
 export const updateUser = async (userData) => {
-    console.log(`Service ~ update user - ${userData.id}:`)
+    console.log(`Service ~ update user - ${userData._id}:`)
     console.log(userData)
 
-    const response = await fetch(`${process.env.REACT_APP_SERVER}/users/${userData.id}`, {
+    const response = await fetch(`${process.env.REACT_APP_SERVER}/users/${userData._id}`, {
         mode: 'cors',
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
