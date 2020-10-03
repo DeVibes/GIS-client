@@ -1,5 +1,5 @@
 export const initialDataState = {
-    id: ``,
+    _id: ``,
     username: ``,
     personName: ``,
     phone: ``,
@@ -14,7 +14,7 @@ export const initialDataState = {
 export const userDataReducer = (state = initialDataState, action) => {
     switch (action.type) {
         case `SET_USER_ID`:
-            return { ...state, id: action.payload}
+            return { ...state, _id: action.payload}
         case `SET_USERNAME`:
             return {...state, coords: action.payload }
         case `SET_SAVED_ADDRESSES`:
