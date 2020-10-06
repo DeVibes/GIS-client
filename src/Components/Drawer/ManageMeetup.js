@@ -224,6 +224,9 @@ export const ManageMeetup = () => {
                         readOnly
                         error={inputValidator.date.isValid == null ? false :!inputValidator.date.isValid}
                         helperText={inputValidator.date.errorMessage}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
                     <TextField
                         margin="dense"
