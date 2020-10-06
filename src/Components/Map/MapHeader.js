@@ -60,9 +60,6 @@ const styles = makeStyles((theme) => {
         },
         menuButton: {
             marginRight: theme.spacing(2),
-            // [desktopWidth]: {
-            //     display: 'none',
-            // },
         },
         drawerPaper: {
             [desktopWidth]: {
@@ -126,7 +123,6 @@ const DrawerWrapper = ({children, mobileOpen, handleDrawerToggle}) => {
 
     return (
         <nav className={classes.drawer}>
-            {/* Mobile */}
             <Hidden smUp implementation="css"> 
                 <Drawer
                     classes={{paper: classes.drawerPaper}}
@@ -141,16 +137,6 @@ const DrawerWrapper = ({children, mobileOpen, handleDrawerToggle}) => {
                     {children}
                 </Drawer>
             </Hidden>
-            {/* Desktop */}
-            {/* <Hidden xsDown implementation="css">
-                <Drawer
-                    classes={{paper: classes.drawerPaper}}
-                    variant="permanent"
-                    open
-                >
-                    {children}
-                </Drawer>
-            </Hidden> */}
         </nav>
     )
 }

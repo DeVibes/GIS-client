@@ -27,12 +27,13 @@ import { setSelectedMeetup } from '../../StateManagement/actions/selectedMeetup'
 import { setSnack } from '../../StateManagement/actions/snackPopup'
 import { setMeetups } from '../../StateManagement/actions/meetups'
 import { setIsPopupOpen } from '../../StateManagement/actions/isPopupOpen'
+import { setIsDrawerOpen } from '../../StateManagement/actions/isDrawerOpen';
 
 /* Services */
 import { deleteMeetupById, getAllMeetups, editMeetup } from '../../Services/Meetups'
 
 /* Validation */
-import { isNameValid } from "../../Validation/newMeetupValidation"
+import { isNameValid, isMaxParticipantsValid } from "../../Validation/newMeetupValidation"
 
 const styles = makeStyles((theme) => ({
     manageMeetup: {
@@ -90,14 +91,16 @@ export const ManageMeetup = () => {
                 isValid = isNameValid(value)
                 break; 
             case `maxParticipants`:
-                isValid = Boolean(value)
+                isValid = isMaxParticipantsValid(value, selectedMeetup.participants.length)
+                if (!isValid)
+                    errorMessage = `Cannot set max participants value below current participants count`
                 break; 
             case `date`:
                 value = discardMilliseconds(value)
                 break
             default: break;
         }
-        if (!isValid) errorMessage = `Incorrect value`
+        if (!isValid && !Boolean(errorMessage)) errorMessage = `Incorrect value`
         setInputValidator({
             ...inputValidator, 
             [name]: {
@@ -122,6 +125,7 @@ export const ManageMeetup = () => {
                     })
                 setMeetups(updatedMeetups)
                 setIsManage(!isManageOpen)
+                setIsDrawerOpen(false)
             } catch ({ message }) {
                 setSnack({
                     isSnackOpen: true,

@@ -1,14 +1,7 @@
 /* Libraries */
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Divider, 
-    IconButton, 
-    List, 
-    ListItem, 
-    ListItemIcon, 
-    ListItemSecondaryAction, 
-    Typography, 
-} from '@material-ui/core'
+import { Divider, Typography, } from '@material-ui/core'
 
 /* Components */
 import { AddAddress } from './AddAddress'

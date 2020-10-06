@@ -105,31 +105,49 @@ export const MeetupPopup = () => {
         let meetupParticipants = clickedMeetup.participants
         let msg
         if (isAttending) {
-            meetupParticipants.push(userData.username)
-            msg = `Registered for this meetup`
+            try {
+                const updatedMeetup = await editMeetup(clickedMeetup._id, { 
+                    participants: [...meetupParticipants, userData.username] 
+                })
+                msg = `Registered for this meetup`
+                updateMeetup(updatedMeetup)
+                setSelectedMeetup(updatedMeetup)
+                setSnack({
+                    isSnackOpen: true,
+                    msg: msg,
+                    isError: false
+                })
+            } catch ({message}) {
+                meetupParticipants = meetupParticipants.filter(participant => participant !== userData.username) 
+                setSnack({
+                    isSnackOpen: true,
+                    msg: `Meetup is already full`,
+                    isError: true
+                })
+            }
         }
         else {
             meetupParticipants = meetupParticipants.filter(participant => participant !== userData.username)
             msg = `Unregistered for this meetup`
-        }
-        try {
-            const updatedMeetup = await editMeetup(clickedMeetup._id, { 
-                participants: meetupParticipants 
-            })
-            updateMeetup(updatedMeetup)
-            setSelectedMeetup(updatedMeetup)
-            setSnack({
-                isSnackOpen: true,
-                msg: msg,
-                isError: false
-            })
-        } catch ({ message }) {
-            setSnack({
-                isSnackOpen: true,
-                msg: message,
-                isError: true
-            })
-        }
+            try {
+                const updatedMeetup = await editMeetup(clickedMeetup._id, { 
+                    participants: meetupParticipants 
+                })
+                updateMeetup(updatedMeetup)
+                setSelectedMeetup(updatedMeetup)
+                setSnack({
+                    isSnackOpen: true,
+                    msg: msg,
+                    isError: false
+                })
+            } catch ({ message }) {
+                setSnack({
+                    isSnackOpen: true,
+                    msg: message,
+                    isError: true
+                })
+            }
+    }   
 
     }
 
@@ -239,32 +257,35 @@ export const MeetupPopup = () => {
                                     }
                                 </Grid>
                             </Grid>
-                            <Grid container spacing={2} alignItems="center">
-                                <Grid item xs={2}>
-                                    <AssignmentIcon/>
+                            {placesLeft !== 0 && (
+                                <Grid container spacing={2} alignItems="center">
+                                    <Grid item xs={2}>
+                                        <AssignmentIcon/>
+                                    </Grid>
+                                    <Grid item xs={10}>
+                                        {isUserAlreadySignedToMeetup() ?
+                                            <Button 
+                                                onClick={() => handleAttendance(false)}
+                                                variant="contained" 
+                                                size="small"
+                                                color="primary"
+                                            >
+                                                Cancel attendance
+                                            </Button>
+                                            :
+                                            <Button 
+                                                onClick={() => handleAttendance(true)}
+                                                variant="contained" 
+                                                size="small"
+                                                color="primary"
+                                            >
+                                                Sign me up
+                                            </Button>
+                                        }
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={10}>
-                                    {isUserAlreadySignedToMeetup() ?
-                                        <Button 
-                                            onClick={() => handleAttendance(false)}
-                                            variant="contained" 
-                                            size="small"
-                                            color="primary"
-                                        >
-                                            Cancel attendance
-                                        </Button>
-                                        :
-                                        <Button 
-                                            onClick={() => handleAttendance(true)}
-                                            variant="contained" 
-                                            size="small"
-                                            color="primary"
-                                        >
-                                            Sign me up
-                                        </Button>
-                                    }
-                                </Grid>
-                            </Grid>
+                                )
+                            }
                             <Grid container spacing={2} alignItems="center">
                                 <Grid item xs={2}>
                                     <SpeakerNotesIcon/>
