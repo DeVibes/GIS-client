@@ -2,13 +2,17 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { InfoWindow } from '@react-google-maps/api'
-import { Avatar, Card, CardContent, CardHeader, CardMedia, Typography, CardActions, Button, Grow, TextField, Grid} from '@material-ui/core';
+import { Avatar, Card, CardContent, CardHeader, CardMedia, Typography, CardActions, Button, Grow, TextField, Grid, Tooltip, Divider} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { green, red } from '@material-ui/core/colors';
 import PlaceIcon from '@material-ui/icons/Place';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import SaveIcon from '@material-ui/icons/Save';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import SettingsIcon from '@material-ui/icons/Settings';
+import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
 
 /* Components */
 import { initialMeetupState } from '../../StateManagement/reducers/selectedMeetupReducer'
@@ -29,6 +33,7 @@ import { updateUser } from '../../Services/Users'
 
 /* Validation */
 import { isNameValid } from "../../Validation/newMeetupValidation"
+import { setIsDrawerOpen } from '../../StateManagement/actions/isDrawerOpen';
 
 const useStyles = makeStyles((theme) =>({
     container: {
@@ -65,6 +70,13 @@ const useStyles = makeStyles((theme) =>({
     },
     desc: {
         marginTop: 10
+    },
+    clickable: {
+        color: theme.color,
+       '&:hover': {
+            cursor: `pointer`,
+            color: theme.hoverColor
+        }
     }
 }))
 
@@ -78,6 +90,7 @@ export const MeetupPopup = () => {
 
     const handleShowSaveAddress = () => {
         setIsAddAddressOpen(true);
+        setIsDrawerOpen(true);
     }
 
     const classes = useStyles()
@@ -122,11 +135,12 @@ export const MeetupPopup = () => {
 
     const handleManageClick = () => {
         setIsAddressesOpen(false)
+        setIsDrawerOpen(true)
         setIsPopupOpen(false)
         setIsManage(!isManageOpen)
     }
 
-    const isAddressAlreadySaved = () => !userData.savedAddresses.some(addressObject => addressObject.address === clickedMeetup.address)
+    const isAddressAlreadySaved = () => userData.savedAddresses.some(addressObject => addressObject.address === clickedMeetup.address)
 
     const isUserAlreadySignedToMeetup = () => clickedMeetup.participants.includes(userData.username)
 
@@ -165,17 +179,31 @@ export const MeetupPopup = () => {
                             src={`/${clickedMeetup.category}Back.jpg`}
                         />
                         <CardContent className={classes.content}>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} alignItems="center">
                                 <Grid item xs={2}>
                                     <PlaceIcon/>
                                 </Grid>
                                 <Grid item xs={10}>
-                                    <Typography variant="subtitle2">
-                                        {clickedMeetup.address}
-                                    </Typography>
+                                    {isAddressAlreadySaved() ? 
+                                        <Typography 
+                                            variant="subtitle2" 
+                                        >
+                                            {clickedMeetup.address}
+                                        </Typography>
+                                     : 
+                                        <Tooltip title="Click to save address">
+                                            <Typography 
+                                                variant="subtitle2" 
+                                                onClick={() => handleShowSaveAddress()}
+                                                className={classes.clickable}
+                                            >
+                                                {clickedMeetup.address}
+                                            </Typography>
+                                        </Tooltip>
+                                    }
                                 </Grid>
                             </Grid>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} alignItems="center">
                                 <Grid item xs={2}>
                                     <ScheduleIcon/>
                                 </Grid>
@@ -185,7 +213,7 @@ export const MeetupPopup = () => {
                                     </Typography>
                                 </Grid>
                             </Grid>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} alignItems="center">
                                 <Grid item xs={2}>
                                     <EventAvailableIcon/>
                                 </Grid>
@@ -195,7 +223,7 @@ export const MeetupPopup = () => {
                                     </Typography>
                                 </Grid>
                             </Grid>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} alignItems="center">
                                 <Grid item xs={2}>
                                     <HowToRegIcon/>
                                 </Grid>
@@ -211,29 +239,54 @@ export const MeetupPopup = () => {
                                     }
                                 </Grid>
                             </Grid>
-                            <Typography paragraph variant="body1" className={classes.desc}>
-                                {clickedMeetup.description}
-                            </Typography>
+                            <Grid container spacing={2} alignItems="center">
+                                <Grid item xs={2}>
+                                    <AssignmentIcon/>
+                                </Grid>
+                                <Grid item xs={10}>
+                                    {isUserAlreadySignedToMeetup() ?
+                                        <Button 
+                                            onClick={() => handleAttendance(false)}
+                                            variant="contained" 
+                                            size="small"
+                                            color="primary"
+                                        >
+                                            Cancel attendance
+                                        </Button>
+                                        :
+                                        <Button 
+                                            onClick={() => handleAttendance(true)}
+                                            variant="contained" 
+                                            size="small"
+                                            color="primary"
+                                        >
+                                            Sign me up
+                                        </Button>
+                                    }
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={2} alignItems="center">
+                                <Grid item xs={2}>
+                                    <SpeakerNotesIcon/>
+                                </Grid>
+                                <Grid item xs={10}>
+                                    <Typography paragraph variant="body1" className={classes.desc}>
+                                        {clickedMeetup.description || "No description available"}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+
                         </CardContent>
                         <CardActions className={classes.actions} >
                             {isAdminOfMeetup() &&
-                                <Button onClick={() => handleManageClick()}>Manage</Button>
-                            }
-                            {isUserAlreadySignedToMeetup() ?
-                                <Button onClick={() => handleAttendance(false)}>
-                                    Cancel attendance
-                                </Button>
-                                :
-                                <Button onClick={() => handleAttendance(true)}>
-                                    Sign me up
+                                <Button 
+                                    onClick={() => handleManageClick()}
+                                    startIcon={<SettingsIcon/>}
+                                    color="primary"
+                                >
+                                    Manage
                                 </Button>
                             }
-                            <Button 
-                                onClick={() => handleShowSaveAddress()}
-                                disabled={!isAddressAlreadySaved()}
-                            >
-                                Save this address
-                            </Button>
                         </CardActions>         
                     </Card>
                 </InfoWindow>

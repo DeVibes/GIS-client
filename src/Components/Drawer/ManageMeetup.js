@@ -8,10 +8,13 @@ import { Button,
     MenuItem, 
     List,
     Divider,
-    ListItem, ListItemText, Collapse, ListItemIcon 
+    ListItem, ListItemText, Collapse, ListItemIcon, Tooltip, IconButton 
 } from '@material-ui/core'
 import FaceIcon from '@material-ui/icons/Face';
 import { makeStyles } from '@material-ui/core/styles';
+import DeleteIcon from '@material-ui/icons/Delete';
+import DoneIcon from '@material-ui/icons/Done';
+import CloseIcon from '@material-ui/icons/Close';
 
 /* Components */
 import { MeetupCategories } from '../../Data/MeetupCategories'
@@ -154,15 +157,10 @@ export const ManageMeetup = () => {
         setInputValidator(initialInputValidationState)
         setIsManage(false)
     }
-
-    // const handleRemoveParticipant = participant => {
-    //     selectedMeetup.participants.splice(selectedMeetup.participants.indexOf(participant), 1)
-    //     setSelectedMeetup(selectedMeetup)
-    // }
     
     return (
         <Grow in={isManageOpen} timeout={1000}>
-            <List subheader={<ListSubheader>Edit meetup</ListSubheader>}>
+            <List subheader={<ListSubheader>Manage meetup</ListSubheader>}>
                 <ListItem className={classes.manageMeetup}>
                     <TextField
                         margin="dense"
@@ -241,21 +239,31 @@ export const ManageMeetup = () => {
                                     <FaceIcon/>
                                 </ListItemIcon>
                                 <ListItemText primary={participant}/>
-                                {/* <ListItemSecondaryAction>
-                                    <Button
-                                        edge="end"
-                                        onClick={() => handleRemoveParticipant(participant)}
-                                    >
-                                        remove participant
-                                    </Button> 
-                                </ListItemSecondaryAction> */}
                             </ListItem>
                         ))}
                     </List>
                 </Collapse>
-                    <Button onClick={handleSave}>Apply changes</Button>
-                    <Button onClick={handleDelete}>Delete meetup</Button>
-                    <Button onClick={handleClose}>Close</Button>
+                <ListItem style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <section>
+                        <Tooltip title="Close" >
+                            <IconButton onClick={() => handleClose()} color="primary">
+                                <CloseIcon/>
+                            </IconButton>
+                        </Tooltip>
+                    </section>
+                    <section>
+                        <Tooltip title="Delete" >
+                            <IconButton onClick={() => handleDelete()} color="secondary">
+                                <DeleteIcon/>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Save">
+                            <IconButton onClick={() => handleSave()} color="primary">
+                                <DoneIcon/>
+                            </IconButton>
+                        </Tooltip>
+                    </section>
+                </ListItem>
                 <Divider/>
             </List>
         </Grow>

@@ -23,87 +23,103 @@ import { MapDrawer } from '../Drawer/MapDrawer'
 import { updateSearchString } from '../../StateManagement/actions/searchQuery'
 import { updateSearchResults } from '../../StateManagement/actions/searchQuery'
 import { setSnack } from '../../StateManagement/actions/snackPopup'
+import { setIsDrawerOpen } from '../../StateManagement/actions/isDrawerOpen'
 import { setIsProfileOpen } from '../../StateManagement/actions/isProfileOpen'
 
 /* Services */
 import { getAddressByString } from '../../Services/GoogleAPI'
 import { setIsAddressesOpen } from '../../StateManagement/actions/isAddressesOpen';
+import { setIsManage } from '../../StateManagement/actions/manageMeetup';
 
-const drawerWidth = 300
 
-const styles = makeStyles((theme) => ({
-    drawer: {
-        [theme.breakpoints.up('md')]: {
-          width: drawerWidth,
-          flexShrink: 0,
-        },
-    },
-    appBar: {
-        [theme.breakpoints.up('md')]: {
-          width: `calc(100% - ${drawerWidth}px)`,
-          marginLeft: drawerWidth,
-        },
-    },
-    toolbar: {
-        display: 'flex',
-        justifyContent: 'space-between',
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-        [theme.breakpoints.up('md')]: {
-          display: 'none',
-        },
-    },
-    drawerPaper: {
-        width: drawerWidth,
-    },
-    searchContainter: {
-        display: 'flex',
-        alignItems: 'center',
-    },
-    search: {
-        position: 'relative',
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.15),
-        '&:hover': {
-          backgroundColor: fade(theme.palette.common.white, 0.25),
-        },
-        marginRight: theme.spacing(2),
-        marginLeft: 0,
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-          marginLeft: theme.spacing(3),
-          width: 'auto',
-        },
-    },
-    inputRoot: {
-        color: 'inherit',
-    },
-    inputInput: {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(1)}px)`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-          width: '20ch',
-        },
-    },
-    newInput: {
-        marginLeft: theme.spacing(1),
-        padding: theme.spacing(1, 1, 1, 0),
-        backgroundColor: fade(theme.palette.common.white, 0.15),
-        '&:hover': {
-          backgroundColor: fade(theme.palette.common.white, 0.25),
-        },
-        width: '100%',
+const styles = makeStyles((theme) => {
+    const mobileWidth = theme.breakpoints.down('xs')
+    const desktopWidth = theme.breakpoints.up('sm')
 
-    },
-    divider: {
-        height: 28,
-        margin: 4,
-    },
-}))
+    return {
+        drawer: {
+            [desktopWidth]: {
+                width: `25vw`,
+                flexShrink: 0,
+            },
+            [mobileWidth]: {
+                width: `50vw`,
+                flexShrink: 0,
+            }
+        },
+        appBar: {
+            [desktopWidth]: {
+                width: `100vw`,
+                marginLeft: `25vw`,
+                backgroundColor: theme.palette.primary
+            },
+        },
+        toolbar: {
+            display: 'flex',
+            justifyContent: 'space-between',
+        },
+        menuButton: {
+            marginRight: theme.spacing(2),
+            // [desktopWidth]: {
+            //     display: 'none',
+            // },
+        },
+        drawerPaper: {
+            [desktopWidth]: {
+                width: `25vw`,
+            },
+            [mobileWidth]: {
+                width: `50vw`,
+            }
+        },
+        searchContainter: {
+            display: 'flex',
+            alignItems: 'center',
+        },
+        search: {
+            position: 'relative',
+            borderRadius: theme.shape.borderRadius,
+            backgroundColor: fade(theme.palette.common.white, 0.15),
+            '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+            },
+            marginRight: theme.spacing(2),
+            marginLeft: 0,
+            width: '100%',
+            [theme.breakpoints.up('sm')]: {
+                marginLeft: theme.spacing(3),
+                width: 'auto',
+            },
+        },
+        inputRoot: {
+            color: 'inherit',
+        },
+        inputInput: {
+            padding: theme.spacing(1, 1, 1, 0),
+            // vertical padding + font size from searchIcon
+            paddingLeft: `calc(1em + ${theme.spacing(1)}px)`,
+            transition: theme.transitions.create('width'),
+            width: '100%',
+            [theme.breakpoints.up('md')]: {
+            width: '20ch',
+            },
+        },
+        newInput: {
+            marginLeft: theme.spacing(1),
+            padding: theme.spacing(1, 1, 1, 0),
+            backgroundColor: fade(theme.palette.common.white, 0.15),
+            '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+            },
+            width: '100%',
+
+        },
+        divider: {
+            height: 28,
+            margin: 4,
+        },
+    }
+})
 
 const DrawerWrapper = ({children, mobileOpen, handleDrawerToggle}) => {
     const classes = styles()
@@ -111,7 +127,7 @@ const DrawerWrapper = ({children, mobileOpen, handleDrawerToggle}) => {
     return (
         <nav className={classes.drawer}>
             {/* Mobile */}
-            <Hidden mdUp implementation="css"> 
+            <Hidden smUp implementation="css"> 
                 <Drawer
                     classes={{paper: classes.drawerPaper}}
                     variant="temporary"      
@@ -126,7 +142,7 @@ const DrawerWrapper = ({children, mobileOpen, handleDrawerToggle}) => {
                 </Drawer>
             </Hidden>
             {/* Desktop */}
-            <Hidden smDown implementation="css">
+            {/* <Hidden xsDown implementation="css">
                 <Drawer
                     classes={{paper: classes.drawerPaper}}
                     variant="permanent"
@@ -134,20 +150,24 @@ const DrawerWrapper = ({children, mobileOpen, handleDrawerToggle}) => {
                 >
                     {children}
                 </Drawer>
-            </Hidden>
+            </Hidden> */}
         </nav>
     )
 }
 
 export const MapHeader = ({ recenterMap }) => {
-    const [mobileOpen, setMobileOpen] = useState(false)
+    let isDrawerOpen = useSelector(({isDrawerOpen}) => isDrawerOpen)
     const [anchorEl, setAnchorEl] = useState(null)
 
     const searchQuery = useSelector(({ searchQuery }) => searchQuery)
 
     const classes = styles()
 
-    const handleDrawerToggle = () => setMobileOpen(!mobileOpen)
+    const handleDrawerToggle = () => {
+        setIsDrawerOpen(!isDrawerOpen)
+        setIsAddressesOpen(false)
+        setIsManage(false)
+    }
 
     const handleAccountOpen = event => setAnchorEl(event.currentTarget)
 
@@ -185,6 +205,7 @@ export const MapHeader = ({ recenterMap }) => {
     const handleAddressesClick = () => {
         handleAccountClose()
         setIsAddressesOpen(true)
+        setIsDrawerOpen(true)
     }
 
     return (
@@ -244,7 +265,7 @@ export const MapHeader = ({ recenterMap }) => {
             </AppBar>
             <DrawerWrapper 
                 handleDrawerToggle={handleDrawerToggle}
-                mobileOpen={mobileOpen}
+                mobileOpen={isDrawerOpen}
             >
                 <MapDrawer/>
             </DrawerWrapper>

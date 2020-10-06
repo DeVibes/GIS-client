@@ -62,6 +62,7 @@ export const MeetupFilter = () => {
                             checked={Boolean(meetupsFilters.attendance)}
                             onChange={handleAttendenceFilter}
                             name="attendance"
+                            color="primary"
                         />
                     </ListItemSecondaryAction>
                 </ListItem>
@@ -83,6 +84,7 @@ export const MeetupFilter = () => {
                                         onChange={handleCategoriesFilter}
                                         checked={isCategoryExist(category.value)}
                                         name={category.value}
+                                        color="primary"
                                     />
                                 </ListItemSecondaryAction>
                             </ListItem>

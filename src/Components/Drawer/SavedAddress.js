@@ -1,12 +1,15 @@
 /* Libraries */
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Button, Divider, Grow, List, ListItem, ListItemText, ListSubheader, TextField, Typography } from '@material-ui/core'
+import { Button, Divider, Grow, IconButton, List, ListItem, ListItemText, ListSubheader, makeStyles, TextField, Tooltip, Typography } from '@material-ui/core'
+import { positions } from '@material-ui/system';
 
 /*Components */
 import { MeetupCategories } from '../../Data/MeetupCategories'
 import { getCurrentDate } from '../../Data/Date'
-
+import DeleteIcon from '@material-ui/icons/Delete';
+import DoneIcon from '@material-ui/icons/Done';
+import AddIcon from '@material-ui/icons/Add';
 
 /* Redux */
 import { setIsAddressesOpen } from '../../StateManagement/actions/isAddressesOpen'
@@ -18,12 +21,28 @@ import { setIsDialogOpen } from '../../StateManagement/actions/isDialogOpen'
 /* Services */
 import { updateUser } from '../../Services/Users'
 
+const styles = makeStyles((theme) => {
+    const mobileWidth = theme.breakpoints.down('xs')
+    const desktopWidth = theme.breakpoints.up('sm')
+
+    return {
+        overflow: {
+            overflow: 'auto',
+            maxHeight: `40vh`
+        },
+        buttons: {
+            display: 'flex',
+            justifyContent: 'space-between'
+        }
+    }
+})
+
 export const SavedAddress = () => {
     /* Redux states */
     let isAddressesOpen = useSelector(({ isAddressesOpen }) => isAddressesOpen)
-    let userSavedAddresses = useSelector(({ userData }) => userData.savedAddresses)
-    let userId = useSelector(({ userData }) => userData.id)
-    let username = useSelector(({ userData }) => userData.username)
+    let { savedAddresses, _id, username } = useSelector(({ userData }) => userData)
+
+    let classes = styles()
 
     /* local states */
     const [isOnEdit, setIsOnEdit] = useState({
@@ -44,13 +63,13 @@ export const SavedAddress = () => {
     }
 
     const handleSubmit = async () => {
-        let editedAddressIndex = userSavedAddresses.findIndex(addressObj => addressObj._id === isOnEdit._id)
-        userSavedAddresses[editedAddressIndex] = isOnEdit
+        let editedAddressIndex = savedAddresses.findIndex(addressObj => addressObj._id === isOnEdit._id)
+        savedAddresses[editedAddressIndex] = isOnEdit
 
         try {
             const updatedUser = await updateUser({
-                id: userId, 
-                savedAddresses: userSavedAddresses
+                _id: _id, 
+                savedAddresses: savedAddresses
             })
             setUserSavedAddress(updatedUser.savedAddresses)
             setIsOnEdit({
@@ -72,10 +91,10 @@ export const SavedAddress = () => {
     }
 
     const handleDelete = async () => {
-        let newSavedAddress = userSavedAddresses.filter(addressObj => addressObj._id !== isOnEdit._id)
+        let newSavedAddress = savedAddresses.filter(addressObj => addressObj._id !== isOnEdit._id)
         try {
             const updatedUser = await updateUser({
-                id: userId, 
+                _id: _id, 
                 savedAddresses: newSavedAddress
             })
             setUserSavedAddress(updatedUser.savedAddresses)
@@ -118,23 +137,26 @@ export const SavedAddress = () => {
     return (
         <>
             <Grow in={isAddressesOpen} timeout={1000}>
-                <List subheader={<ListSubheader>Saved addresses</ListSubheader>}>
-                    {userSavedAddresses.length > 0 ? 
-                        userSavedAddresses.map((addressObj, index) => (
-                            <ListItem key={index} button
-                                onClick={() => handleAddressesClick(addressObj)}
-                            >
-                                <ListItemText 
-                                    primary={addressObj.nickName}
-                                    secondary={addressObj.address}
-                                />
+                <List 
+                    subheader={<ListSubheader className={classes.header}>Saved addresses</ListSubheader>}>
+                    <div className={classes.overflow}>
+                        {savedAddresses.length > 0 ? 
+                            savedAddresses.map((addressObj, index) => (
+                                <ListItem key={index} button
+                                    onClick={() => handleAddressesClick(addressObj)}
+                                >
+                                    <ListItemText 
+                                        primary={addressObj.nickName}
+                                        secondary={addressObj.address}
+                                    />
+                                </ListItem>
+                            ))
+                            :
+                            <ListItem>
+                                <Typography variant="h5">No addresses yet</Typography>
                             </ListItem>
-                        ))
-                        :
-                        <ListItem>
-                            <Typography variant="h5">No addresses yet</Typography>
-                        </ListItem>
-                    }
+                        }
+                    </div>
                 </List>
             </Grow>
             <Divider/>
@@ -166,10 +188,26 @@ export const SavedAddress = () => {
                                     }}
                                 />
                             </ListItem>
-                            <ListItem>
-                                <Button onClick={() => handleCreate()}>Create meetup</Button>
-                                <Button onClick={() => handleDelete()}>Delete address</Button>
-                                <Button onClick={() => handleSubmit()}>Save changes</Button>
+                            <ListItem className={classes.buttons}>
+                                <section>
+                                    <Tooltip title="Create event">
+                                        <IconButton onClick={() => handleCreate()} color="primary">
+                                            <AddIcon/>
+                                        </IconButton>
+                                    </Tooltip>
+                                </section>
+                                <section>
+                                    <Tooltip title="Delete" >
+                                        <IconButton onClick={() => handleDelete()} color="secondary">
+                                            <DeleteIcon/>
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Save">
+                                        <IconButton onClick={() => handleSubmit()} color="primary">
+                                            <DoneIcon/>
+                                        </IconButton>
+                                    </Tooltip>
+                                </section>
                             </ListItem>
                         </List>
                     </Grow>
