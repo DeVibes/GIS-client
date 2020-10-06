@@ -1,7 +1,9 @@
 /* Libraries */
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Button, Divider, Grow, List, ListItem, ListItemSecondaryAction, ListItemText, ListSubheader, TextField } from '@material-ui/core'
+import { Button, Divider, Grow, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, ListSubheader, TextField, Tooltip } from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close';
+import AddIcon from '@material-ui/icons/Add';
 
 /* Redux */
 import { setSnack } from '../../StateManagement/actions/snackPopup'
@@ -26,7 +28,7 @@ export const AddAddress = () => {
     /* Redux states */
     let { isOpen, addressNickname } = useSelector(({ addAddressData }) => addAddressData)
     let { coords, address } = useSelector(({ selectedMeetup }) => selectedMeetup)
-    let { id, savedAddresses } = useSelector(({ userData }) => userData)
+    let { _id, savedAddresses } = useSelector(({ userData }) => userData)
 
     /* Local states */
     const [inputValidator, setInputValidator] = useState(initialInputValidationState)
@@ -62,44 +64,64 @@ export const AddAddress = () => {
 
     const handleSaveAddress = async () => {
         if (isInputValid()) {
-            const response = await updateUser({
-                id: id,
-                savedAddresses: [...savedAddresses, {
-                    nickName: addressNickname,
-                    address: address,
-                    coords: coords
-                }]
-            })
-            setSnack({
-                isSnackOpen: true,
-                msg: `${addressNickname} is saved successfully`,
-                isError: false
-            })
-            resetAddAddressData()
-            setUserData(response)
+            try {
+                const response = await updateUser({
+                    _id: _id,
+                    savedAddresses: [...savedAddresses, {
+                        nickName: addressNickname,
+                        address: address,
+                        coords: coords
+                    }]
+                })
+                setSnack({
+                    isSnackOpen: true,
+                    msg: `${addressNickname} is saved successfully`,
+                    isError: false
+                })
+                resetAddAddressData()
+                setUserData(response)
+            } catch ({ message }) {
+                setSnack({
+                    isSnackOpen: true,
+                    msg: message,
+                    isError: true
+                })
+            }
         }
+    }
+
+    const handleClose = () => {
+        resetAddAddressData()
     }
     return (
         <>
             <Grow in={isOpen} timeout={1000}>
                 <List subheader={<ListSubheader>Add address</ListSubheader>}>
                     <ListItem>
-                        <ListItemText>
-                            <TextField
-                                margin="dense"
-                                label="Address nickname"
-                                error={
-                                    inputValidator.addressNickName.isValid == null ? false : !inputValidator.addressNickName.isValid
-                                }
-                                helperText={inputValidator.addressNickName.errorMessage}
-                                type="text"
-                                name="addressNickName"
-                                onChange={handleNickNameChange}
-                            />
-                        </ListItemText>
-                        <ListItemSecondaryAction>
-                            <Button onClick={() => handleSaveAddress()}>Save it</Button>
-                        </ListItemSecondaryAction>
+                        <TextField
+                            margin="dense"
+                            label="Address nickname"
+                            fullWidth
+                            error={
+                                inputValidator.addressNickName.isValid == null ? false : !inputValidator.addressNickName.isValid
+                            }
+                            helperText={inputValidator.addressNickName.errorMessage}
+                            type="text"
+                            name="addressNickName"
+                            onChange={handleNickNameChange}
+                        />
+                    </ListItem>
+                    <ListItem style={{display: 'flex', justifyContent: 'space-between'}}>
+                        <Tooltip title="Close" >
+                            <IconButton onClick={() => handleClose()} color="primary">
+                                <CloseIcon/>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Add" >
+                            <IconButton onClick={() => handleSaveAddress()} color="primary">
+                                <AddIcon/>
+                            </IconButton>
+                        </Tooltip>
                     </ListItem>
                 </List>
             </Grow>
