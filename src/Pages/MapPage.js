@@ -15,7 +15,7 @@ import { setSelectedMeetup } from '../StateManagement/actions/selectedMeetup'
 import { setIsDialogOpen } from '../StateManagement/actions/isDialogOpen'
 import { setIsPopupOpen } from '../StateManagement/actions/isPopupOpen'
 import { setSnackState } from '../StateManagement/actions/snackPopup'
-import { setUserData } from '../StateManagement/actions/userData'
+import { setPersonName, setUserCoords, setUserData, setUserId, setUserName, setUserPhone, setUserSavedAddress } from '../StateManagement/actions/userData'
 
 /* Services */
 import { getAddressByCoords } from '../Services/GoogleAPI'
@@ -29,25 +29,19 @@ const mapContainerStyle = {
 
 export const MapPage = () => {
     const userData = useSelector(({ userData }) => userData)
-    const snackPopup = useSelector(({ snackPopup }) => snackPopup)
+    let snackPopup = useSelector(({ snackPopup }) => snackPopup)
 
     useEffect(() => {
-        //TODO Get current location from browser
 
         async function fetchUser(loggedUser) {
             const user = await getUserDataByUsername(loggedUser)
-            setUserData({
-                _id: user._id,
-                username: user.username,
-                personName: user.personName,
-                phone: user.phone,
-                coords: {
-                    lat: 31.963358630236876,
-                    lng: 34.80391502380371
-                },
-                savedAddresses: user.savedAddresses || []
-            })
+            setUserId(user._id)
+            setUserName(user.username)
+            setPersonName(user.personName)
+            setUserPhone(user.phone)
+            setUserSavedAddress(user.savedAddresses || [])
         } 
+        navigator.geolocation.getCurrentPosition(fetchUserGeoCoords)
         let loggedUser = localStorage.getItem("loginUser")
         fetchUser(loggedUser)
     }, [])
@@ -61,6 +55,14 @@ export const MapPage = () => {
       mapRef.current.panTo(firstAddress);
       mapRef.current.setZoom(17);
     }, []);
+
+    const fetchUserGeoCoords = ({ coords }) => {
+        let { latitude, longitude } = coords
+        setUserCoords({
+            lat: latitude,
+            lng: longitude
+        })
+    }
     
     /* Handlers */
     const handleSnackClose = () => setSnackState(false)

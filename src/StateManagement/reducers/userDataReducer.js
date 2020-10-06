@@ -16,7 +16,7 @@ export const userDataReducer = (state = initialDataState, action) => {
         case `SET_USER_ID`:
             return { ...state, _id: action.payload}
         case `SET_USERNAME`:
-            return {...state, coords: action.payload }
+            return {...state, username: action.payload }
         case `SET_SAVED_ADDRESSES`:
             return {...state, savedAddresses: action.payload }
         case `SET_PERSON_NAME`:
