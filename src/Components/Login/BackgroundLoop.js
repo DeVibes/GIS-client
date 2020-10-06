@@ -15,7 +15,7 @@ const styles = makeStyles({
         height: `100vh`,
         width: `100vw`,
         objectFit: `cover`,
-        opacity: 0.8,
+        opacity: 0.65,
     }
 })
 

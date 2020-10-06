@@ -12,6 +12,8 @@ export const meetupsReducer = (state = [], action) => {
             let oldIndex = meetups.findIndex((meetup) => meetup._id === action.payload._id)
             meetups[oldIndex] = action.payload
             return meetups
+        case `RESET_MEETUPS`:
+            return [];
         default:
             return state;
     }

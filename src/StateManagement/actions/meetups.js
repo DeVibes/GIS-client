@@ -34,3 +34,11 @@ export const updateMeetup = updatedMeetup => {
         payload: updatedMeetup
     })
 }
+
+export const resetMeetups = () => {
+    console.log(`Redux ~ reseting meetups`);
+    store.dispatch({
+        type: `RESET_MEETUPS`,
+        payload: null
+    })
+}

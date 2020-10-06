@@ -20,6 +20,7 @@ const pageStyle = makeStyles({
 })
 
 export const LoginPage = () => {
+    /* Redux states */
     const snackPopup = useSelector(({ snackPopup }) => snackPopup)
     const { loginWrapper } = pageStyle()
 

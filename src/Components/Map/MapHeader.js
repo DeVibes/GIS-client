@@ -1,6 +1,7 @@
 /* Libraries */
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useHistory } from "react-router-dom";
 import { AppBar, 
     Toolbar, 
     IconButton, 
@@ -30,6 +31,9 @@ import { setIsProfileOpen } from '../../StateManagement/actions/isProfileOpen'
 import { getAddressByString } from '../../Services/GoogleAPI'
 import { setIsAddressesOpen } from '../../StateManagement/actions/isAddressesOpen';
 import { setIsManage } from '../../StateManagement/actions/manageMeetup';
+import { resetMeetups } from '../../StateManagement/actions/meetups';
+import { resetSelecedMeetup } from '../../StateManagement/actions/selectedMeetup';
+import { resetUserDate } from '../../StateManagement/actions/userData';
 
 
 const styles = makeStyles((theme) => {
@@ -142,10 +146,14 @@ const DrawerWrapper = ({children, mobileOpen, handleDrawerToggle}) => {
 }
 
 export const MapHeader = ({ recenterMap }) => {
+    /* Redux states */
     let isDrawerOpen = useSelector(({isDrawerOpen}) => isDrawerOpen)
+    let searchQuery = useSelector(({ searchQuery }) => searchQuery)
+
+    /* Local states */
     const [anchorEl, setAnchorEl] = useState(null)
 
-    const searchQuery = useSelector(({ searchQuery }) => searchQuery)
+    let history = useHistory()
 
     const classes = styles()
 
@@ -164,10 +172,13 @@ export const MapHeader = ({ recenterMap }) => {
         setIsProfileOpen(true)
     }
 
-    //TODO
     const handleLogOut = () => {
-        console.log(`logging out ...`)
+        resetMeetups()
+        resetSelecedMeetup()
+        resetUserDate()
         handleAccountClose()
+        console.log(`logging out ...`)
+        history.push(`/`)
     }
 
     const handleSearchChange = event => updateSearchString(event.target.value)

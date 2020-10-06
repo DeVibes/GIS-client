@@ -8,7 +8,7 @@ import { Card,
     Typography, 
     CardActions, 
     Button,
-    Grid } 
+    Grid, Paper, makeStyles } 
 from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
@@ -22,6 +22,38 @@ import { authUser } from '../../Services/Users'
 
 /* Validation */
 import { isUsernameValid, isPasswordValid } from '../../Validation/userValidation';
+
+const styles = makeStyles((theme) => {
+    return {
+        header: {
+            color: `white`,
+            marginBottom: theme.spacing(2)
+        },
+        subHeader: {
+            color: theme.palette.secondary.main
+        },
+        buttons: {
+            display: `flex`,
+            marginTop: theme.spacing(2),
+            justifyContent: `space-around`
+        },
+        paper: {
+            background: `rgba(244, 244, 245, 0.18)`,
+            display: `flex`,
+            flexDirection: `column`,
+            justifyContent: `space-between`,
+            padding: theme.spacing(5),
+            boxShadow: `0 0 20px rgba(0,0,0,0.75)`
+        },
+        input: {
+            alignItems: `flex-end`,
+            backgroundColor: `white`,
+            margin: `${theme.spacing(1)}px 0`,
+            padding: `${theme.spacing(0)}px ${theme.spacing(2)}px`,
+            borderRadius: 5
+        }
+    }
+})
 
 export const LoginStep = ({ stepChange }) => {
     /* Redux states */
@@ -111,56 +143,70 @@ export const LoginStep = ({ stepChange }) => {
         } 
     }
 
+    const classes = styles()
+
     return (
-        <Card>
-            <CardContent>
-                <Typography variant="h4">
-                    Login
-                </Typography>
-                <Grid container spacing={1} alignItems="flex-end">
-                    <Grid item>
-                        <PersonIcon/>
-                    </Grid>
-                    <Grid item>
-                        <TextField
-                            margin="dense"
-                            label="Username"
-                            error={
-                                inputValidator.username.isValid == null ? false : !inputValidator.username.isValid
-                            }
-                            helperText={inputValidator.username.errorMessage}
-                            type="text"
-                            name="username"
-                            fullWidth
-                            onChange={handleInputChange}
-                            value={loginData?.username || ''}
-                        />
-                    </Grid>
+        <Paper
+            className={classes.paper}
+            elevation={0}
+        >
+            <Typography variant="h4" align="center" className={classes.header}>
+                Please log in
+            </Typography>
+            <Grid container spacing={1} className={classes.input}>
+                <TextField
+                    margin="dense"
+                    label="Username"
+                    error={
+                        inputValidator.username.isValid == null ? false : !inputValidator.username.isValid
+                    }
+                    helperText={inputValidator.username.errorMessage}
+                    type="text"
+                    name="username"
+                    onChange={handleInputChange}
+                    value={loginData?.username || ''}
+                    color="primary"
+                    fullWidth
+                />
+            </Grid>
+            <Grid container spacing={1} className={classes.input}>
+                <TextField
+                    margin="dense"
+                    label="Password"
+                    error={
+                        inputValidator.password.isValid == null ? false : !inputValidator.password.isValid
+                    }
+                    helperText={inputValidator.password.errorMessage}
+                    type="password"
+                    name="password"
+                    onChange={handleInputChange}
+                    color="primary"
+                    fullWidth
+
+                />
+            </Grid>
+            <Grid container spacing={1} className={classes.buttons}>
+                <Grid item xs={6}>
+                    <Button 
+                        onClick={() => stepChange(0)}
+                        variant="contained"
+                        fullWidth
+                        color="primary"
+                    >
+                        Back
+                    </Button>
                 </Grid>
-                <Grid container spacing={1} alignItems="flex-end">
-                    <Grid item>
-                        <VpnKeyIcon/>
-                    </Grid>
-                    <Grid item>               
-                        <TextField
-                            margin="dense"
-                            label="Password"
-                            error={
-                                inputValidator.password.isValid == null ? false : !inputValidator.password.isValid
-                            }
-                            helperText={inputValidator.password.errorMessage}
-                            type="password"
-                            name="password"
-                            fullWidth
-                            onChange={handleInputChange}
-                        />
-                    </Grid>
+                <Grid item xs={6}>
+                    <Button 
+                        onClick={handleSubmit}
+                        variant="contained"
+                        fullWidth
+                        color="primary"
+                    >
+                        Submit
+                    </Button>
                 </Grid>
-            </CardContent>
-            <CardActions>
-                <Button onClick={handleSubmit}>Submit</Button>
-                <Button onClick={() => stepChange(0)}>Back</Button>
-            </CardActions>
-        </Card>
+            </Grid>
+        </Paper>
     )
 }

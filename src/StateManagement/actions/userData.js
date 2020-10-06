@@ -67,3 +67,11 @@ export const setUserData = data => {
     })
 }
 
+export const resetUserDate = () => {
+    console.log(`Redux ~ reseting user data`)
+    store.dispatch({
+        type: `RESET_USER_DATA`,
+        payload: null
+    })
+}
+

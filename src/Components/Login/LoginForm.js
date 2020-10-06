@@ -8,12 +8,25 @@ import { WelcomeStep } from './WelcomeStep'
 import { LoginStep } from './LoginStep'
 import { RegisterStep } from './RegisterStep'
 
-const styles = makeStyles({
-    formWrapper: {
-        position: 'absolute',
-        zIndex: 100,
-        width: `30vw`
-    },
+const styles = makeStyles((theme) => {
+    const mobileWidth = theme.breakpoints.down('xs')
+    const desktopWidth = theme.breakpoints.up('sm')
+    
+    return {
+        formWrapper: {
+            position: 'absolute',
+            zIndex: 100,
+            width: `30vw`,
+            [mobileWidth]: {
+                width: `70vw`
+            },
+            // height: `50vh`,
+            backgroundColor: `transparent`,
+            padding: theme.spacing(2),
+            // marginTop: `30vh`
+
+        }
+    }
 })
 
 /*  
@@ -29,7 +42,7 @@ export const LoginForm = () => {
     const handleStepChange = (newStep) => setActiveStep(newStep)
 
     return (
-        <div className={classes.formWrapper}>
+        <section className={classes.formWrapper}>
             <SwipeableViews
                 index={activeStep}
                 onChangeIndex={handleStepChange}
@@ -38,6 +51,6 @@ export const LoginForm = () => {
                 <LoginStep stepChange={handleStepChange}/>
                 <RegisterStep stepChange={handleStepChange}/>
             </SwipeableViews>
-        </div>
+        </section>
     )
 }

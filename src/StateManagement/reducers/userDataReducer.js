@@ -29,7 +29,9 @@ export const userDataReducer = (state = initialDataState, action) => {
             return { ...state, coords: action.payload }
         case `SET_USER_DATA`:
             return action.payload;
-        default:
+        case `RESET_USER_DATA`:
+            return initialDataState
+        default: 
             return state;
     }
 }
