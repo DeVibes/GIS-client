@@ -51,6 +51,10 @@ const initialInputValidationState = {
         isValid: true,
         errorMessage: null
     },
+    date: {
+        isValid: null,
+        errorMessage: null
+    }
 }
 
 export const ManageMeetup = () => {
@@ -96,8 +100,8 @@ export const ManageMeetup = () => {
                     errorMessage = `Cannot set max participants value below current participants count`
                 break; 
             case `date`:
-                value = discardMilliseconds(value)
-                break
+                isValid = Boolean(value)
+                break;
             default: break;
         }
         if (!isValid && !Boolean(errorMessage)) errorMessage = `Incorrect value`
@@ -218,7 +222,8 @@ export const ManageMeetup = () => {
                         value={selectedMeetup?.date}
                         onChange={handleInputChange}
                         readOnly
-                        // error={inputValidator.meetupDate || false}
+                        error={inputValidator.date.isValid == null ? false :!inputValidator.date.isValid}
+                        helperText={inputValidator.date.errorMessage}
                     />
                     <TextField
                         margin="dense"

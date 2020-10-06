@@ -37,6 +37,10 @@ const initialInputValidationState = {
         isValid: null,
         errorMessage: null
     },
+    date: {
+        isValid: null,
+        errorMessage: null
+    }
 }
 
 
@@ -77,7 +81,7 @@ export const MeetupDialog = () => {
                 isValid = Boolean(value)
                 break; 
             case `date`:
-                value = discardMilliseconds(value)
+                isValid = Boolean(value)
                 break;
             default: break;
         }
@@ -173,13 +177,18 @@ export const MeetupDialog = () => {
                 <TextField
                     margin="dense"
                     label="Date"
-                    error={inputValidator.meetupDate || false}
+                    error={inputValidator.date.isValid == null ? false :!inputValidator.date.isValid}
+                    helperText={inputValidator.date.errorMessage}
                     type="datetime-local"
                     name="date"
                     fullWidth
+                    defaultValue={selectedMeetup?.date}
                     onChange={handleInputChange}
-                    value={selectedMeetup?.date}
                     readOnly
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+
                 />
                 <TextField 
                     margin="dense"
