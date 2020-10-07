@@ -38,7 +38,7 @@ const initialInputValidationState = {
         errorMessage: null
     },
     date: {
-        isValid: null,
+        isValid: true,
         errorMessage: null
     }
 }
