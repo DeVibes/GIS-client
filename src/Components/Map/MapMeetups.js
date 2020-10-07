@@ -45,7 +45,7 @@ export const MapMeetups = () => {
                     key={meetup._id}
                     position={meetup.coords}
                     icon={{
-                        url: `/${meetup.category}.png`,
+                        url: `./Assets/${meetup.category}.png`,
                         scaledSize: {
                             width: 50,
                             height: 50

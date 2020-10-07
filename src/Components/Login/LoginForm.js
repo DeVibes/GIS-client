@@ -20,10 +20,8 @@ const styles = makeStyles((theme) => {
             [mobileWidth]: {
                 width: `70vw`
             },
-            // height: `50vh`,
             backgroundColor: `transparent`,
             padding: theme.spacing(2),
-            // marginTop: `30vh`
 
         }
     }

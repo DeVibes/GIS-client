@@ -112,11 +112,7 @@ export const AddAddress = () => {
                         />
                     </ListItem>
                     <ListItem style={{display: 'flex', justifyContent: 'space-between'}}>
-                        <Tooltip title="Close" >
-                            <IconButton onClick={() => handleClose()} color="primary">
-                                <CloseIcon/>
-                            </IconButton>
-                        </Tooltip>
+                        <Button onClick={() => handleClose()} color="primary">Close</Button>
                         <Tooltip title="Add" >
                             <IconButton onClick={() => handleSaveAddress()} color="primary">
                                 <AddIcon/>

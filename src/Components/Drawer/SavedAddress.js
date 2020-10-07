@@ -1,15 +1,15 @@
 /* Libraries */
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Button, Divider, Grow, IconButton, List, ListItem, ListItemText, ListSubheader, makeStyles, TextField, Tooltip, Typography } from '@material-ui/core'
-import { positions } from '@material-ui/system';
+import { Button, Divider, Grow, IconButton, List, ListItem, ListItemIcon, ListItemText, ListSubheader, makeStyles, TextField, Tooltip, Typography } from '@material-ui/core'
 
-/*Components */
+/* Components */
 import { MeetupCategories } from '../../Data/MeetupCategories'
 import { getCurrentDate } from '../../Data/Date'
 import DeleteIcon from '@material-ui/icons/Delete';
 import DoneIcon from '@material-ui/icons/Done';
 import AddIcon from '@material-ui/icons/Add';
+import NotListedLocationIcon from '@material-ui/icons/NotListedLocation';
 
 /* Redux */
 import { setIsAddressesOpen } from '../../StateManagement/actions/isAddressesOpen'
@@ -22,8 +22,6 @@ import { setIsDialogOpen } from '../../StateManagement/actions/isDialogOpen'
 import { updateUser } from '../../Services/Users'
 
 const styles = makeStyles((theme) => {
-    const mobileWidth = theme.breakpoints.down('xs')
-    const desktopWidth = theme.breakpoints.up('sm')
 
     return {
         overflow: {
@@ -33,6 +31,9 @@ const styles = makeStyles((theme) => {
         buttons: {
             display: 'flex',
             justifyContent: 'space-between'
+        },
+        empty: {
+
         }
     }
 })
@@ -153,7 +154,12 @@ export const SavedAddress = () => {
                             ))
                             :
                             <ListItem>
-                                <Typography variant="h5">No addresses yet</Typography>
+                                <ListItemIcon>
+                                    <NotListedLocationIcon/>
+                                </ListItemIcon>
+                                <ListItemText>
+                                    <Typography variant="h5">No addresses yet</Typography>
+                                </ListItemText>
                             </ListItem>
                         }
                     </div>

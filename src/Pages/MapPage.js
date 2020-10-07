@@ -41,7 +41,7 @@ export const MapPage = () => {
             setUserPhone(user.phone)
             setUserSavedAddress(user.savedAddresses || [])
         } 
-        navigator.geolocation.getCurrentPosition(fetchUserGeoCoords)
+        navigator.geolocation.getCurrentPosition(fetchUserGeoCoordsCallback)
         let loggedUser = localStorage.getItem("loginUser")
         fetchUser(loggedUser)
     }, [])
@@ -56,7 +56,7 @@ export const MapPage = () => {
       mapRef.current.setZoom(17);
     }, []);
 
-    const fetchUserGeoCoords = ({ coords }) => {
+    const fetchUserGeoCoordsCallback = ({ coords }) => {
         let { latitude, longitude } = coords
         setUserCoords({
             lat: latitude,

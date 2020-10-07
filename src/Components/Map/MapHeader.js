@@ -245,7 +245,6 @@ export const MapHeader = ({ recenterMap }) => {
                         aria-label="open drawer"
                         edge="end"
                         onClick={handleAccountOpen}
-                        // className={classes.menuButton}
                     >
                         <AccountCircle/>
                     </IconButton>

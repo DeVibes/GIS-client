@@ -257,11 +257,7 @@ export const ManageMeetup = () => {
                 </Collapse>
                 <ListItem style={{display: 'flex', justifyContent: 'space-between'}}>
                     <section>
-                        <Tooltip title="Close" >
-                            <IconButton onClick={() => handleClose()} color="primary">
-                                <CloseIcon/>
-                            </IconButton>
-                        </Tooltip>
+                        <Button onClick={() => handleClose()} color="primary">Close</Button>
                     </section>
                     <section>
                         <Tooltip title="Delete" >

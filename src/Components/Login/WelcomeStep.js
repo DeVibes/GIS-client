@@ -8,10 +8,12 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 const styles = makeStyles((theme) => {
     return {
         header: {
-            color: `white`
+            color: `white`,
+            font: `Roboto`
         },
         subHeader: {
-            color: theme.palette.secondary.main
+            color: `white`,
+            margin: `${theme.spacing(3)}px ${theme.spacing(2)}px`
         },
         buttons: {
             display: `flex`,
@@ -35,12 +37,12 @@ export const WelcomeStep = ({ stepChange }) => {
             className={classes.paper}
             elevation={0}
         >
-            <Typography variant="h4" align="center" className={classes.header}>
-                App name
+            <Typography variant="h3" align="center" className={classes.header}>
+                Meetme
             </Typography>
-            {/* <Typography variant="subtitle2" align="center" className={classes.subHeader}>
+            <Typography variant="h6" align="center" className={classes.subHeader}>
                 A new way to meet and communicate
-            </Typography> */}
+            </Typography>
             <Typography component="div" className={classes.buttons}>
                 <Button 
                     onClick={() => stepChange(2)}
@@ -49,7 +51,7 @@ export const WelcomeStep = ({ stepChange }) => {
                     variant="contained"
                     size="small"
                 >
-                    New user?
+                    New user
                 </Button>
                 <Button 
                     onClick={() => stepChange(1)}

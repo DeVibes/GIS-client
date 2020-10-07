@@ -17,8 +17,8 @@ export const MapDrawer = () => {
 
     return (
         <>
-            <Typography variant="h5" align="center">
-                App name
+            <Typography variant="h5" align="center" color="primary" style={{fontFamily: `Roboto`, margin: `5px`}}>
+                Meetme
             </Typography>
             <Divider/>
             <MeetupFilter/>

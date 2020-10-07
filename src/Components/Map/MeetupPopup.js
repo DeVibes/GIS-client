@@ -194,7 +194,7 @@ export const MeetupPopup = () => {
                         <CardMedia
                             component="img"
                             className={classes.media}
-                            src={`/${clickedMeetup.category}Back.jpg`}
+                            src={`./Assets/${clickedMeetup.category}Back.jpg`}
                         />
                         <CardContent className={classes.content}>
                             <Grid container spacing={2} alignItems="center">
