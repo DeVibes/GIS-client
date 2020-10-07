@@ -105,7 +105,7 @@ export const SavedAddress = () => {
             })
             setSnack({
                 isSnackOpen: true,
-                msg: `Saved successfully`,
+                msg: `Deleted successfully`,
                 isError: false
             })
         } catch ({ message }) {
@@ -196,11 +196,9 @@ export const SavedAddress = () => {
                             </ListItem>
                             <ListItem className={classes.buttons}>
                                 <section>
-                                    <Tooltip title="Create event">
-                                        <IconButton onClick={() => handleCreate()} color="primary">
-                                            <AddIcon/>
-                                        </IconButton>
-                                    </Tooltip>
+                                    <Button onClick={() => handleCreate()} color="primary">
+                                        Create meetup
+                                    </Button>
                                 </section>
                                 <section>
                                     <Tooltip title="Delete" >

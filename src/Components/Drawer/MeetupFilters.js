@@ -73,7 +73,7 @@ export const MeetupFilter = () => {
                     </ListItemSecondaryAction>
                 </ListItem>
                 <ListItem>
-                    <ListItemText primary="Made by me"/>
+                    <ListItemText primary="Made by me only"/>
                     <ListItemSecondaryAction>
                         <Checkbox
                             checked={Boolean(admin)}
