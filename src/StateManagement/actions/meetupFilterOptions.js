@@ -8,6 +8,14 @@ export const setAttendanceFilter = username => {
     })
 }
 
+export const setMineFilter = isMine => {
+    console.log(`Redux ~ setting admin filter ${isMine}`)
+    store.dispatch({
+        type: `SET_ADMIN`,
+        payload: isMine
+    })
+}
+
 export const setCategoriesFilter = categories => {
     console.log(`Redux ~ setting categories filter`)
     console.log(categories)

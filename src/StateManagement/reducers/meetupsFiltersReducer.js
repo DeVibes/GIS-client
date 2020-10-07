@@ -2,6 +2,7 @@ import { MeetupCategories } from '../../Data/MeetupCategories'
 
 const initialSearchState = {
     attendance: "",
+    admin: "",
     categories: MeetupCategories.map(category => category.value)
 }
 
@@ -11,6 +12,11 @@ export const meetupsFiltersReducer = (state = initialSearchState, action) => {
             return {
                 ...state,
                 attendance: action.payload
+            }
+        case `SET_ADMIN`:
+            return {
+                ...state,
+                admin: action.payload
             }
         case `SET_CATEGORIES`:
             return {

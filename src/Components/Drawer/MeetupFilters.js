@@ -20,14 +20,14 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import { MeetupCategories } from '../../Data/MeetupCategories'
 
 /* Redux */
-import { setAttendanceFilter, setCategoriesFilter } from '../../StateManagement/actions/meetupFilterOptions'
+import { setAttendanceFilter, setCategoriesFilter, setMineFilter } from '../../StateManagement/actions/meetupFilterOptions'
 
 /* Services */
 import { getAllMeetups } from '../../Services/Meetups'
 
 export const MeetupFilter = () => {
     /* Redux states */
-    let meetupsFilters = useSelector(({ meetupsFilters }) => meetupsFilters)
+    let { attendance, categories, admin } = useSelector(({ meetupsFilters }) => meetupsFilters)
     let userData = useSelector(({ userData }) => userData)
 
     /* Local states */
@@ -39,10 +39,16 @@ export const MeetupFilter = () => {
         let username = checked ? userData.username : ""
         setAttendanceFilter(username)
     }
-
+    
+    const handleMineFilter = (event) => {
+        let { checked } = event.target
+        let admin = checked ? userData.username : ""
+        setMineFilter(admin)
+    }
+    
     const handleCategoriesFilter = (event) => {
         let { name, checked } = event.target
-        let updatedCategories = meetupsFilters.categories
+        let updatedCategories = categories
         if (checked) 
             updatedCategories.push(name)
         else
@@ -50,7 +56,7 @@ export const MeetupFilter = () => {
         setCategoriesFilter(updatedCategories)
     }
 
-    const isCategoryExist = (categoryValue) => meetupsFilters.categories.some((category) => category === categoryValue)
+    const isCategoryExist = (categoryValue) => categories.some((category) => category === categoryValue)
 
     return (
         <>
@@ -59,9 +65,20 @@ export const MeetupFilter = () => {
                     <ListItemText primary="Im attending"/>
                     <ListItemSecondaryAction>
                         <Checkbox
-                            checked={Boolean(meetupsFilters.attendance)}
+                            checked={Boolean(attendance)}
                             onChange={handleAttendenceFilter}
                             name="attendance"
+                            color="primary"
+                        />
+                    </ListItemSecondaryAction>
+                </ListItem>
+                <ListItem>
+                    <ListItemText primary="Made by me"/>
+                    <ListItemSecondaryAction>
+                        <Checkbox
+                            checked={Boolean(admin)}
+                            onChange={handleMineFilter}
+                            name="mine"
                             color="primary"
                         />
                     </ListItemSecondaryAction>
